@@ -257,7 +257,7 @@
                         </div>
 
                         <div class="text-center mt-2" style="display: flex; justify-content: space-between;">
-                            <small>You have any account? <a href="" class="font-weight-bold" style="text-decoration: underline !important;">Login</a></small>
+                            <small>You don't have an account? <a href="/register" class="font-weight-bold" style="text-decoration: underline !important;">Signup</a></small>
                             <small>Forget Password? <a href="" class="font-weight-bold" style="text-decoration: underline !important;">Reset</a></small>
                         </div>
                     </form>

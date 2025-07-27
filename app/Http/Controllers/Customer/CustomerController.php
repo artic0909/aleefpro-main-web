@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\WelcomeCustomerMail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class CustomerController extends Controller
 {
@@ -34,13 +36,16 @@ class CustomerController extends Controller
         ]);
 
         try {
-            Customer::create([
+            $customer = Customer::create([
                 'name'     => $validated['name'],
                 'email'    => $validated['email'],
                 'mobile'   => $validated['mobile'],
                 'password' => bcrypt($validated['password']),
-                'type'     => 'stock-manager',
             ]);
+
+            Mail::to($customer->email)->send(new WelcomeCustomerMail($customer->name));
+
+
 
             return redirect()->route('customer.login')->with('success', 'Registered successfully.');
         } catch (QueryException $e) {
