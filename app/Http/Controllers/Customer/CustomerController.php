@@ -1,0 +1,100 @@
+<?php
+
+namespace App\Http\Controllers\Customer;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Customer;
+use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
+
+class CustomerController extends Controller
+{
+    // Handles customer login and registration=========================================>
+    public function loginView()
+    {
+
+        return view('login');
+    }
+
+    public function registerView()
+    {
+
+        return view('register');
+    }
+
+    public function register(Request $request)
+    {
+        $validated = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:customers,email',
+            'mobile'   => 'required',
+            'password' => 'required|string|min:6',
+        ]);
+
+        try {
+            Customer::create([
+                'name'     => $validated['name'],
+                'email'    => $validated['email'],
+                'mobile'   => $validated['mobile'],
+                'password' => bcrypt($validated['password']),
+                'type'     => 'stock-manager',
+            ]);
+
+            return redirect()->route('customer.login')->with('success', 'Registered successfully.');
+        } catch (QueryException $e) {
+
+            if ($e->errorInfo[1] == 1062) {
+                return back()->withInput()->withErrors(['email' => 'This email is already registered.']);
+            }
+
+            return back()->withInput()->withErrors(['general' => 'Something went wrong. Please try again.']);
+        }
+    }
+
+    public function login(Request $request)
+    {
+        try {
+            // Validate request
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+
+            $credentials = $request->only('email', 'password');
+
+            if (Auth::guard('customers')->attempt($credentials)) {
+                $request->session()->regenerate();
+                return redirect()->route('home')->with('success', 'Login successful.');
+            }
+
+            // If credentials are incorrect
+            return back()->withInput()->withErrors([
+                'email' => 'Invalid credentials. Please check your email or password.',
+            ]);
+        } catch (ValidationException $e) {
+
+            throw $e;
+        } catch (QueryException $e) {
+            return back()->withInput()->withErrors([
+                'general' => 'A system error occurred. Please try again later.',
+            ]);
+        } catch (\Exception $e) {
+            return back()->withInput()->withErrors([
+                'general' => 'Unexpected error. Contact support if this continues.',
+            ]);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('customers')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home')->with('success', 'Logged out successfully.');
+    }
+    // Handles customer login and registration=========================================>
+
+}
