@@ -102,4 +102,10 @@ class CustomerController extends Controller
     }
     // Handles customer login and registration=========================================>
 
+    // About Page=======================================================>
+    public function aboutView()
+    {
+        return view('about');
+    }
+
 }

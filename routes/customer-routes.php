@@ -9,6 +9,8 @@ Route::get('/register', [CustomerController::class, 'registerView'])->name('cust
 Route::post('/login', [CustomerController::class, 'login'])->name('customer.login.post');
 Route::post('/register', [CustomerController::class, 'register'])->name('customer.register.post');
 
+Route::get('/about', [CustomerController::class, 'aboutView'])->name('customer.about');
+
 Route::get('/', function () {
     if (Auth::guard('customers')->check()) {
         return view('customer-home');
