@@ -11,12 +11,8 @@ Route::post('/register', [CustomerController::class, 'register'])->name('custome
 
 Route::get('/about', [CustomerController::class, 'aboutView'])->name('customer.about');
 
-Route::get('/', function () {
-    if (Auth::guard('customers')->check()) {
-        return view('customer-home');
-    }
-    return view('home');
-})->name('home');
+Route::get('/', [CustomerController::class, 'homeView'])->name('home');
+
 
 Route::middleware(['auth:customers'])->group(function () {
 

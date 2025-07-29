@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Sub Category</title>
+    <title>Users</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('../../admin/vendors/feather/feather.css') }}">
     <link rel="stylesheet" href="{{ asset('../../admin/vendors/ti-icons/css/themify-icons.css') }}">
@@ -203,30 +203,32 @@
                     <div class="row">
                         <div class="card col-12">
                             <div class="card-body">
-                                <h4 class="card-title">Sub Categories</h4>
+                                <h4 class="card-title">All Users</h4>
 
                                 <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
                                                 <th>SL</th>
-                                                <th>Image</th>
-                                                <th>Main Category Name</th>
-                                                <th>Sub Category Name</th>
-                                                <th>Edit</th>
+                                                <th>User Name</th>
+                                                <th>Email ID</th>
+                                                <th>Mobile Number</th>
+                                                <th>Call</th>
+                                                <th>Mail</th>
                                                 <th>Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($subcategories as $subcategory)
+                                            @foreach($users as $user)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td><img src="{{ asset('storage/' . $subcategory->image) }}" class="img-fluid" alt=""></td>
-                                                <td>{{ $subcategory->mainCategory->main_category_name ?? '-' }}</td>
+                                                <td>{{$user->name}}</td>
+                                                <td>{{$user->email}}</td>
+                                                <td>{{$user->mobile}}</td>
 
-                                                <td>{{ $subcategory->sub_category_name }}</td>
-                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollEditModal{{ $subcategory->id }}" class="btn btn-success">Edit</button></td>
-                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollDeleteModal{{ $subcategory->id }}" class="btn btn-danger">Delete</button></td>
+                                                <td><a href="tel:{{$user->mobile}}" class="btn btn-warning">Call</a></td>
+                                                <td><a href="mailto:{{$user->email}}" class="btn btn-success">Mail</a></td>
+                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollDeleteModal{{ $user->id }}" class="btn btn-danger">Delete</button></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -245,98 +247,19 @@
 
 
 
-                <!-- Add Modal -->
-                <div class="modal fade" id="scrollAddModal" tabindex="-1" aria-labelledby="scrollAddModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <form action="{{route('admin.sub-category.store')}}" method="POST" class="modal-content" enctype="multipart/form-data">
-                            @csrf
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="scrollAddModalLabel">Add Sub Category</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div>
-                                    <label for="main_category_name" class="form-label">Category Image<span class="text-danger">*</span></label>
-                                    <input type="file" name="image" id="image" class="form-control" required>
-                                </div>
-
-                                <div>
-                                    <label for="main_category_name" class="form-label">Main Category<span class="text-danger">*</span></label>
-                                    <select name="main_category_id" id="main_category_id" class="form-select">
-                                        <option value="" selected>Select Main Category</option>
-                                        @foreach($maincategories as $maincategory)
-                                        <option value="{{ $maincategory->id }}">{{ $maincategory->main_category_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label for="main_category_name" class="form-label">Category Image<span class="text-danger">*</span></label>
-                                    <input type="text" name="sub_category_name" id="sub_category_name" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-
-                <!-- Edit Modal -->
-                @foreach($subcategories as $subcategory)
-                <div class="modal fade" id="scrollEditModal{{ $subcategory->id }}" tabindex="-1" aria-labelledby="scrollEditModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <form action="{{route('admin.sub-category.edit', $subcategory->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="scrollEditModalLabel{{ $subcategory->id }}">Edit Sub Category</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <img src="{{ asset('storage/' . $subcategory->image) }}" class="img-fluid" alt="">
-                                <div>
-                                    <label for="main_category_name" class="form-label">Category Image<span class="text-danger">*</span></label>
-                                    <input type="file" name="image" id="image" class="form-control">
-                                </div>
-
-                                <div>
-                                    <label for="main_category_name" class="form-label">Main Category<span class="text-danger">*</span></label>
-                                    <select name="main_category_id" id="main_category_id" class="form-select">
-                                        <option value="{{ $maincategory->id }}" selected>{{ $maincategory->main_category_name }}</option>
-                                        @foreach($maincategories as $maincategory)
-                                        <option value="{{ $maincategory->id }}">{{ $maincategory->main_category_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label for="main_category_name" class="form-label">Category Name<span class="text-danger">*</span></label>
-                                    <input type="text" name="sub_category_name" id="sub_category_name" value="{{$subcategory->sub_category_name}}" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                @endforeach
-
                 <!-- Delete Modal -->
-                @foreach($subcategories as $subcategory)
-                <div class="modal fade" id="scrollDeleteModal{{ $subcategory->id }}" tabindex="-1" aria-labelledby="scrollDeleteModalLabel" aria-hidden="true">
+                @foreach($users as $user)
+                <div class="modal fade" id="scrollDeleteModal{{ $user->id }}" tabindex="-1" aria-labelledby="scrollDeleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form action="{{route('admin.sub-category.delete', $subcategory->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
+                        <form action="{{route('admin.user.delete', $user->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
                             @csrf
                             @method('DELETE')
                             <div class="modal-body">
                                 <div>
-                                    <h2 class="text-danger">You want to this Category?</h2>
-                                    <p>{{ $subcategory->sub_category_name }}</p>
+                                    <h2 class="text-danger">You want to this User?</h2>
+                                    <p>{{ $user->name }}</p>
+                                    <p>{{ $user->email }}</p>
+                                    <p>{{ $user->mobile }}</p>
 
                                 </div>
                             </div>
@@ -348,6 +271,7 @@
                     </div>
                 </div>
                 @endforeach
+
 
 
                 <!-- content-wrapper ends -->

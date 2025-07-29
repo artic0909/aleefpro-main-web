@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\WelcomeCustomerMail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
+use App\Models\ScrollBanners;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
@@ -108,4 +109,13 @@ class CustomerController extends Controller
         return view('about');
     }
 
+    public function homeView()
+    {
+        $scrollingBanners = ScrollBanners::all();
+
+        if (Auth::guard('customers')->check()) {
+            return view('customer-home', compact('scrollingBanners'));
+        }
+        return view('home', compact('scrollingBanners'));
+    }
 }

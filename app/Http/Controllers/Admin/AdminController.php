@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\Blog;
+use App\Models\Customer;
 use App\Models\MainCategory;
 use App\Models\Offer;
 use App\Models\Product;
@@ -158,52 +160,53 @@ class AdminController extends Controller
 
     public function addOffers(Request $request)
     {
-        // Validate image
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'link' => 'nullable|string|max:255',
+            'offer_percentage' => 'nullable|string|max:100',
         ]);
 
-        // Store the image in 'public/scroll_banners' (maps to storage/app/public/scroll_banners)
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('scroll_banners', 'public'); // stores inside storage/app/public/scroll_banners
+            $path = $request->file('image')->store('offers', 'public');
 
-            // Save to DB
             Offer::create([
-                'image' => $path, // only relative path needed
+                'image' => $path,
+                'link' => $request->link,
+                'offer_percentage' => $request->offer_percentage,
             ]);
 
-            return back()->with('success', 'Scroll banner added successfully!');
+            return back()->with('success', 'Offer added successfully!');
         }
 
         return back()->with('error', 'Image upload failed.');
     }
 
-
     public function editOffers(Request $request, $id)
     {
-        // Validate image
         $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'link' => 'nullable|string|max:255',
+            'offer_percentage' => 'nullable|string|max:100',
         ]);
 
-        // Find the banner
-        $banner = Offer::findOrFail($id);
+        $offer = Offer::findOrFail($id);
 
-        // If a new image is uploaded
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($banner->image && Storage::disk('public')->exists($banner->image)) {
-                Storage::disk('public')->delete($banner->image);
+            if ($offer->image && Storage::disk('public')->exists($offer->image)) {
+                Storage::disk('public')->delete($offer->image);
             }
 
-            // Store new image
-            $path = $request->file('image')->store('scroll_banners', 'public');
-            $banner->image = $path;
+            $path = $request->file('image')->store('offers', 'public');
+            $offer->image = $path;
         }
 
-        $banner->save();
+        // Always update these fields regardless of image presence
+        $offer->link = $request->link;
+        $offer->offer_percentage = $request->offer_percentage;
 
-        return back()->with('success', 'Scroll banner updated successfully!');
+        $offer->save();
+
+        return back()->with('success', 'Offer updated successfully!');
     }
 
     public function deleteOffers($id)
@@ -484,7 +487,8 @@ class AdminController extends Controller
         return back()->with('success', 'Product updated successfully.');
     }
 
-    public function deleteProduct($id){
+    public function deleteProduct($id)
+    {
         $product = Product::find($id);
         if ($product) {
             $images = json_decode($product->images ?? '[]', true);
@@ -498,5 +502,102 @@ class AdminController extends Controller
             return back()->with('success', 'Product deleted successfully.');
         }
         return back()->with('error', 'Product not found.');
+    }
+
+    // Blogs==============================================================>
+    public function blogsView()
+    {
+        $blogs = Blog::all();
+        return view('admin.admin-blogs', compact('blogs'));
+    }
+
+    public function addBlog(Request $request)
+    {
+
+        $request->validate([
+            'blog_name' => 'required|string|max:255',
+            'description' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp',
+        ]);
+
+
+        Blog::create([
+            'blog_name' => $request->blog_name,
+            'description' => $request->description,
+            'slug' => Str::slug($request->blog_name),
+            'posted_date' => now(),
+            'image' => $request->hasFile('image') ? $request->file('image')->store('blogs', 'public') : null,
+        ])->save();
+        return back()->with('success', 'Blog added successfully!');
+    }
+
+    public function editBlog(Request $request, $id)
+    {
+        // Validate input
+        $request->validate([
+            'blog_name' => 'required|string|max:255',
+            'description' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp',
+        ]);
+
+        $blog = Blog::findOrFail($id);
+
+        // If new image is uploaded
+        if ($request->hasFile('image')) {
+
+            if ($blog->image && Storage::disk('public')->exists($blog->image)) {
+                Storage::disk('public')->delete($blog->image);
+            }
+
+            // Store new image
+            $newImagePath = $request->file('image')->store('blogs', 'public');
+        } else {
+            $newImagePath = $blog->image; // keep old image
+        }
+
+        // Update the subcategory
+        $blog->update([
+            'blog_name' => $request->blog_name,
+            'description' => $request->description,
+            'slug' => Str::slug($request->blog_name),
+            'posted_date' => now(),
+            'image' => $newImagePath,
+        ]);
+
+        return back()->with('success', 'Blog updated successfully!');
+    }
+
+    public function deleteBlog($id)
+    {
+        // Find the blog
+        $blog = Blog::findOrFail($id);
+
+        // Delete the image file if it exists
+        if ($blog->image && Storage::disk('public')->exists($blog->image)) {
+            Storage::disk('public')->delete($blog->image);
+        }
+
+
+        $blog->delete();
+
+        return back()->with('success', 'Blog deleted successfully!');
+    }
+
+    // Customers==============================================================>
+    public function customersView()
+    {
+
+        $users = Customer::all();
+        return view('admin.admin-users', compact('users'));
+    }
+
+    public function deleteCustomer($id)
+    {
+
+        $users = Customer::findOrFail($id);
+
+        $users->delete();
+
+        return back()->with('success', 'User deleted successfully!');
     }
 }

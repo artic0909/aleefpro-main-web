@@ -46,4 +46,15 @@ Route::middleware(['auth:admins'])->group(function () {
     Route::post('/admin/products', [AdminController::class, 'addProduct'])->name('admin.product.store');
     Route::post('/admin/product/update/{id}', [AdminController::class, 'editProduct'])->name('admin.product.update');
     Route::post('/admin/product/delete/{id}', [AdminController::class, 'deleteProduct'])->name('admin.product.delete');
+
+    // Blogs
+    Route::get('/admin/blogs', [AdminController::class, 'blogsView'])->name('admin.blogs');
+    Route::post('/admin/blogs', [AdminController::class, 'addBlog'])->name('admin.blog.store');
+    Route::put('/admin/blog/update/{id}', [AdminController::class, 'editBlog'])->name('admin.blog.update');
+    Route::delete('/admin/blog/delete/{id}', [AdminController::class, 'deleteBlog'])->name('admin.blog.delete');
+
+    // Customers
+        Route::get('admin/all-users', [AdminController::class, 'customersView'])->name('admin.user');
+    Route::delete('admin/all-users/delete/{id}', [AdminController::class, 'deleteCustomer'])->name('admin.user.delete');
+
 });

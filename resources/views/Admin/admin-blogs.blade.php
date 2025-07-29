@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Sub Category</title>
+    <title>Blogs</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('../../admin/vendors/feather/feather.css') }}">
     <link rel="stylesheet" href="{{ asset('../../admin/vendors/ti-icons/css/themify-icons.css') }}">
@@ -203,7 +203,7 @@
                     <div class="row">
                         <div class="card col-12">
                             <div class="card-body">
-                                <h4 class="card-title">Sub Categories</h4>
+                                <h4 class="card-title">Blogs</h4>
 
                                 <div class="table-responsive">
                                     <table class="table table-hover">
@@ -211,22 +211,22 @@
                                             <tr>
                                                 <th>SL</th>
                                                 <th>Image</th>
-                                                <th>Main Category Name</th>
-                                                <th>Sub Category Name</th>
+                                                <th>Blog Name</th>
+                                                <th>Description</th>
                                                 <th>Edit</th>
                                                 <th>Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($subcategories as $subcategory)
+                                            @foreach($blogs as $blog)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td><img src="{{ asset('storage/' . $subcategory->image) }}" class="img-fluid" alt=""></td>
-                                                <td>{{ $subcategory->mainCategory->main_category_name ?? '-' }}</td>
+                                                <td><img src="{{ asset('storage/' . $blog->image) }}" class="img-fluid" alt=""></td>
+                                                <td>{{ $blog->blog_name}}</td>
 
-                                                <td>{{ $subcategory->sub_category_name }}</td>
-                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollEditModal{{ $subcategory->id }}" class="btn btn-success">Edit</button></td>
-                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollDeleteModal{{ $subcategory->id }}" class="btn btn-danger">Delete</button></td>
+                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollDescriptionModal{{ $blog->id }}" class="btn btn-warning">Desccription</button></td>
+                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollEditModal{{ $blog->id }}" class="btn btn-success">Edit</button></td>
+                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollDeleteModal{{ $blog->id }}" class="btn btn-danger">Delete</button></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -248,31 +248,27 @@
                 <!-- Add Modal -->
                 <div class="modal fade" id="scrollAddModal" tabindex="-1" aria-labelledby="scrollAddModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form action="{{route('admin.sub-category.store')}}" method="POST" class="modal-content" enctype="multipart/form-data">
+                        <form action="{{route('admin.blog.store')}}" method="POST" class="modal-content" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-header">
-                                <h5 class="modal-title" id="scrollAddModalLabel">Add Sub Category</h5>
+                                <h5 class="modal-title" id="scrollAddModalLabel">Add Blog</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div>
-                                    <label for="main_category_name" class="form-label">Category Image<span class="text-danger">*</span></label>
+                                    <label for="main_category_name" class="form-label">Blog Image<span class="text-danger">*</span></label>
                                     <input type="file" name="image" id="image" class="form-control" required>
                                 </div>
 
                                 <div>
-                                    <label for="main_category_name" class="form-label">Main Category<span class="text-danger">*</span></label>
-                                    <select name="main_category_id" id="main_category_id" class="form-select">
-                                        <option value="" selected>Select Main Category</option>
-                                        @foreach($maincategories as $maincategory)
-                                        <option value="{{ $maincategory->id }}">{{ $maincategory->main_category_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="blog_name" class="form-label">Blog Title<span class="text-danger">*</span></label>
+
+                                    <input type="text" class="form-control" name="blog_name" id="blog_name" placeholder="Enter blog title" required>
                                 </div>
 
                                 <div>
-                                    <label for="main_category_name" class="form-label">Category Image<span class="text-danger">*</span></label>
-                                    <input type="text" name="sub_category_name" id="sub_category_name" class="form-control" required>
+                                    <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+                                    <textarea name="description" id="description" class="form-control" required rows="5"></textarea>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -285,37 +281,35 @@
 
 
                 <!-- Edit Modal -->
-                @foreach($subcategories as $subcategory)
-                <div class="modal fade" id="scrollEditModal{{ $subcategory->id }}" tabindex="-1" aria-labelledby="scrollEditModalLabel" aria-hidden="true">
+                @foreach($blogs as $blog)
+                <div class="modal fade" id="scrollEditModal{{ $blog->id }}" tabindex="-1" aria-labelledby="scrollEditModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form action="{{route('admin.sub-category.edit', $subcategory->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
+                        <form action="{{route('admin.blog.update', $blog->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="modal-header">
-                                <h5 class="modal-title" id="scrollEditModalLabel{{ $subcategory->id }}">Edit Sub Category</h5>
+                                <h5 class="modal-title" id="scrollEditModalLabel{{ $blog->id }}">Edit Sub Category</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <img src="{{ asset('storage/' . $subcategory->image) }}" class="img-fluid" alt="">
+                                <img src="{{ asset('storage/' . $blog->image) }}" class="img-fluid" alt="">
+
                                 <div>
-                                    <label for="main_category_name" class="form-label">Category Image<span class="text-danger">*</span></label>
+                                    <label for="main_category_name" class="form-label">Blog Image<span class="text-danger">*</span></label>
                                     <input type="file" name="image" id="image" class="form-control">
                                 </div>
 
                                 <div>
-                                    <label for="main_category_name" class="form-label">Main Category<span class="text-danger">*</span></label>
-                                    <select name="main_category_id" id="main_category_id" class="form-select">
-                                        <option value="{{ $maincategory->id }}" selected>{{ $maincategory->main_category_name }}</option>
-                                        @foreach($maincategories as $maincategory)
-                                        <option value="{{ $maincategory->id }}">{{ $maincategory->main_category_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="blog_name" class="form-label">Blog Title<span class="text-danger">*</span></label>
+
+                                    <input type="text" class="form-control" name="blog_name" id="blog_name" value="{{$blog->blog_name}}">
                                 </div>
 
                                 <div>
-                                    <label for="main_category_name" class="form-label">Category Name<span class="text-danger">*</span></label>
-                                    <input type="text" name="sub_category_name" id="sub_category_name" value="{{$subcategory->sub_category_name}}" class="form-control" required>
+                                    <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+                                    <textarea name="description" id="description" class="form-control" rows="5">{{$blog->description}}</textarea>
                                 </div>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -327,16 +321,16 @@
                 @endforeach
 
                 <!-- Delete Modal -->
-                @foreach($subcategories as $subcategory)
-                <div class="modal fade" id="scrollDeleteModal{{ $subcategory->id }}" tabindex="-1" aria-labelledby="scrollDeleteModalLabel" aria-hidden="true">
+                @foreach($blogs as $blog)
+                <div class="modal fade" id="scrollDeleteModal{{ $blog->id }}" tabindex="-1" aria-labelledby="scrollDeleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form action="{{route('admin.sub-category.delete', $subcategory->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
+                        <form action="{{route('admin.blog.delete', $blog->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
                             @csrf
                             @method('DELETE')
                             <div class="modal-body">
                                 <div>
-                                    <h2 class="text-danger">You want to this Category?</h2>
-                                    <p>{{ $subcategory->sub_category_name }}</p>
+                                    <h2 class="text-danger">You want to this Blog?</h2>
+                                    <p>{{ $blog->blog_name }}</p>
 
                                 </div>
                             </div>
@@ -345,6 +339,30 @@
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+                @endforeach
+
+                <!-- Description Modal -->
+                @foreach($blogs as $blog)
+                <div class="modal fade" id="scrollDescriptionModal{{ $blog->id }}" tabindex="-1" aria-labelledby="scrollDescriptionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="scrollDescriptionModalLabel">Blog Description</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div>
+                                    <h4 class="text-danger">{{ $blog->blog_name}}</h4>
+                                    <h5>Description: {{ $blog->description }}</h5>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 @endforeach

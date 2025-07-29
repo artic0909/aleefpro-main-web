@@ -10,6 +10,8 @@ class Offer extends Model
 
     protected $fillable = [
         'image',
+        'link',
+        'offer_percentage',
     ];
 
     public function getImageUrlAttribute()

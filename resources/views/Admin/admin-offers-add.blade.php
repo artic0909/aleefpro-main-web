@@ -211,13 +211,19 @@
                                             <tr>
                                                 <th>SL</th>
                                                 <th>Banners</th>
-                                                <th colspan="2">Actions</th>
+                                                <th>Offer Percentage</th>
+                                                <th>Product Link</th>
+                                                <th>Edit</th>
+                                                <th>delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($offers as $offer)
                                             <tr>
+                                                <td>{{$loop->iteration}}</td>
                                                 <td><img src="{{ asset('storage/' . $offer->image) }}" class="img-fluid" alt="" style="width: 110px; height: 50px; border-radius: 10px;"></td>
+                                                <td>{{$offer->offer_percentage}}</td>
+                                                <td><a href="{{$offer->offer_percentage}}" target="_black" class="btn btn-warning">Link</a></td>
                                                 <td><button data-bs-toggle="modal" data-bs-target="#scrollEditModal{{ $offer->id }}" class="btn btn-success">Edit</button></td>
                                                 <td><button data-bs-toggle="modal" data-bs-target="#scrollDeleteModal{{ $offer->id }}" class="btn btn-danger">Delete</button></td>
                                             </tr>
@@ -249,12 +255,22 @@
                             <form action="{{route('admin.offer.store')}}" method="POST" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="scrollAddModalLabel">Add Scrolling Banners</h5>
+                                    <h5 class="modal-title" id="scrollAddModalLabel">Add Offers</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div>
-                                        <input type="file" name="image" id="image" class="form-controll">
+                                        <input type="file" name="image" id="image" class="form-control">
+                                    </div>
+
+                                    <div>
+                                        <label for="offer_percentage" class="form-label">Add Offer<span class="text-danger">*</span></label>
+                                        <input type="text" name="offer_percentage" id="offer_percentage" class="form-control" placeholder="Ex- 20%">
+                                    </div>
+
+                                    <div>
+                                        <label for="link" class="form-label">Add Product Link<span class="text-danger">*</span></label>
+                                        <input type="text" name="link" id="link" class="form-control">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -273,14 +289,24 @@
                             <form action="{{route('admin.offer.edit', $offer->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="scrollEditModalLabel{{ $offer->id }}">Edit Scrolling Banners</h5>
+                                    <h5 class="modal-title" id="scrollEditModalLabel{{ $offer->id }}">Edit Offers</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div>
                                         <img src="{{ asset('storage/' . $offer->image) }}" class="img-fluid" alt="" width="100%" style="border-radius: 10px; margin-bottom: 10px;">
 
-                                        <input type="file" name="image" id="image" class="form-controll">
+                                        <input type="file" name="image" id="image" class="form-control">
+                                    </div>
+
+                                    <div>
+                                        <label for="offer_percentage" class="form-label">Add Offer<span class="text-danger">*</span></label>
+                                        <input type="text" name="offer_percentage" id="offer_percentage" class="form-control" value="{{$offer->offer_percentage}}">
+                                    </div>
+
+                                    <div>
+                                        <label for="link" class="form-label">Add Product Link<span class="text-danger">*</span></label>
+                                        <input type="text" name="link" id="link" class="form-control" value="{{$offer->link}}">
                                     </div>
                                 </div>
                                 <div class="modal-footer">

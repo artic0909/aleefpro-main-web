@@ -218,7 +218,7 @@
                 <i class="fas fa-user text-primary"></i>
                 <span class="badge text-warning" style="padding-bottom: 2px">X</span>
               </a>
-              
+
               <a href="" class="btn px-0 ml-3">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge text-secondary border border-secondary rounded-circle"
@@ -238,91 +238,17 @@
       <div class="col-lg-8">
         <div id="header-carousel" class="carousel slide carousel-fade mb-30 mb-lg-0" data-ride="carousel">
           <ol class="carousel-indicators">
-            <li data-target="#header-carousel" data-slide-to="0" class="active"></li>
-            <li data-target="#header-carousel" data-slide-to="1"></li>
-            <li data-target="#header-carousel" data-slide-to="2"></li>
-            <li data-target="#header-carousel" data-slide-to="3"></li>
-            <li data-target="#header-carousel" data-slide-to="4"></li>
+            @foreach($scrollingBanners as $index => $banner)
+            <li data-target="#header-carousel" data-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}"></li>
+            @endforeach
+
           </ol>
           <div class="carousel-inner" style="border-radius: 10px;">
-            <div class="carousel-item position-relative active" style="height: 430px">
-              <img class="position-absolute w-100 h-100" src="img/carousel-1.jpg" style="object-fit: cover" />
-              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                <!-- <div class="p-3" style="max-width: 700px">
-                  <h3 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                    SAFETY VESTS
-                  </h3>
-                  <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="font-size: 1.2rem">
-                    HiVis & Contrast Tape vests for industrial visibility.
-                  </p>
-                  <a class="btn btn-org btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
-                    href="#">Enquiry Now</a>
-                </div> -->
-              </div>
+            @foreach($scrollingBanners as $index => $banner)
+            <div class="carousel-item position-relative {{ $index == 0 ? 'active' : '' }}" style="height: 430px">
+              <img class="position-absolute w-100 h-100" src="{{ asset('storage/' . $banner->image) }}" style="object-fit: cover" />
             </div>
-            <div class="carousel-item position-relative" style="height: 430px">
-              <img class="position-absolute w-100 h-100" src="img/carousel-2.jpg" style="object-fit: cover" />
-              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                <!-- <div class="p-3" style="max-width: 700px">
-                  <h3 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                    SAFETY SHIRTS
-                  </h3>
-                  <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="font-size: 1.2rem">
-                    Durable HiVis & Contrast shirts for all work zones.
-                  </p>
-                  <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Enquiry
-                    Now</a>
-                </div> -->
-              </div>
-            </div>
-
-            <div class="carousel-item position-relative" style="height: 430px">
-              <img class="position-absolute w-100 h-100" src="img/fr.webp" style="object-fit: cover" />
-              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                <!-- <div class="p-3" style="max-width: 700px">
-                  <h3 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                    RAINWEAR JACKETS
-                  </h3>
-                  <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="font-size: 1.2rem">
-                    Waterproof jackets with HiVis & Contrast Tape.
-                  </p>
-                  <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Enquiry
-                    Now</a>
-                </div> -->
-              </div>
-            </div>
-
-            <div class="carousel-item position-relative" style="height: 430px">
-              <img class="position-absolute w-100 h-100" src="img/carousel-2.jpg" style="object-fit: cover" />
-              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                <!-- <div class="p-3" style="max-width: 700px">
-                  <h3 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                    PROTECTIVE JACKETS
-                  </h3>
-                  <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="font-size: 1.2rem">
-                    All-weather jackets with high-visibility designs.
-                  </p>
-                  <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Enquiry
-                    Now</a>
-                </div> -->
-              </div>
-            </div>
-
-            <div class="carousel-item position-relative" style="height: 430px">
-              <img class="position-absolute w-100 h-100" src="img/carousel-2.jpg" style="object-fit: cover" />
-              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                <!-- <div class="p-3" style="max-width: 700px">
-                  <h3 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">
-                    INDUSTRIAL SAFETY WEAR
-                  </h3>
-                  <p class="mx-md-5 px-5 animate__animated animate__bounceIn" style="font-size: 1.2rem">
-                    Explore, inquire, and source safety gear with ease.
-                  </p>
-                  <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Enquiry
-                    Now</a>
-                </div> -->
-              </div>
-            </div>
+            @endforeach
           </div>
         </div>
       </div>
