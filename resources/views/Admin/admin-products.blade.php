@@ -216,9 +216,11 @@
                                                 <th>Product Name</th>
                                                 <th>Sizes</th>
                                                 <th>Colors</th>
+                                                <th>Actual Price</th>
+                                                <th>Selling Price</th>
+                                                <th>Size Chart</th>
                                                 <th>Description</th>
                                                 <th>Information</th>
-                                                <th>Size Chart</th>
                                                 <th>Edit</th>
                                                 <th>Delete</th>
                                             </tr>
@@ -244,10 +246,12 @@
                                                 <td>{{$product->product_name}}</td>
                                                 <td>{{$product->sizes}}</td>
                                                 <td>{{$product->colors}}</td>
-                                                <td>{{$product->description}}</td>
-                                                <td>{{$product->information}}</td>
+                                                <td>{{$product->actual_price}}</td>
+                                                <td>{{$product->selling_price}}</td>
 
                                                 <td><img src="{{ asset('storage/' . $product->size_chart_image) }}" class="img-fluid" alt=""></td>
+                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollDescriptionModal{{ $product->id }}" class="btn btn-warning">Desccription</button></td>
+                                                <td><button data-bs-toggle="modal" data-bs-target="#scrollInfoModal{{ $product->id }}" class="btn btn-info">Info</button></td>
                                                 <td><button data-bs-toggle="modal" data-bs-target="#scrollEditModal{{$product->id}}" class="btn btn-success">Edit</button></td>
                                                 <td><button data-bs-toggle="modal" data-bs-target="#scrollDeleteModal{{$product->id}}" class="btn btn-danger">Delete</button></td>
                                             </tr>
@@ -479,7 +483,7 @@
                 @endforeach
 
                 <!-- Delete Modal -->
-                 @foreach ($products as $product)
+                @foreach ($products as $product)
                 <div class="modal fade" id="scrollDeleteModal{{ $product->id }}" tabindex="-1" aria-labelledby="scrollDeleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <form action="{{route('admin.product.delete', $product->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
@@ -501,6 +505,54 @@
                 </div>
                 @endforeach
 
+                <!-- Description Modal -->
+                @foreach ($products as $product)
+                <div class="modal fade" id="scrollDescriptionModal{{ $product->id }}" tabindex="-1" aria-labelledby="scrollDescriptionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="scrollDescriptionModalLabel">Product Description</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div>
+                                    <h4 class="text-danger">{{ $product->product_name}}</h4>
+                                    <h5>Description: {{ $product->description }}</h5>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+
+                <!-- Information Modal -->
+                @foreach ($products as $product)
+                <div class="modal fade" id="scrollInfoModal{{ $product->id }}" tabindex="-1" aria-labelledby="scrollInfoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="scrollInfoModalLabel">Product Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div>
+                                    <h4 class="text-danger">{{ $product->product_name}}</h4>
+                                    <h5>Information: {{ $product->information }}</h5>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
 
 
 
