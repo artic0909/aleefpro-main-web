@@ -366,10 +366,11 @@ class AdminController extends Controller
 
     public function productsView()
     {
-       
+
         $mainCategories = MainCategory::with('subCategories')->get();
+        $subCategories = SubCategory::with('mainCategory')->get();
         $products = Product::with('subCategory')->get();
-        return view('admin.admin-products', compact('mainCategories', 'products'));
+        return view('admin.admin-products', compact('mainCategories', 'products', 'subCategories'));
     }
 
 
@@ -419,5 +420,83 @@ class AdminController extends Controller
         ]);
 
         return back()->with('success', 'Product saved successfully.');
+    }
+
+    public function editProduct(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $request->validate([
+            'sub_category_id' => 'required|exists:sub_categories,id',
+            'product_name' => 'required|string|max:255',
+            'images.*' => 'nullable|image',
+            'sizes' => 'nullable|string',
+            'colors' => 'nullable|string',
+            'actual_price' => 'required|numeric',
+            'selling_price' => 'required|numeric',
+            'description' => 'nullable|string',
+            'information' => 'nullable|string',
+            'size_chart_image' => 'nullable|image',
+        ]);
+
+
+        if ($request->hasFile('images')) {
+            $oldImages = json_decode($product->images ?? '[]', true);
+            foreach ($oldImages as $oldImage) {
+                Storage::disk('public')->delete($oldImage);
+            }
+
+            $imagePaths = [];
+            foreach ($request->file('images') as $file) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('products/images', $filename, 'public');
+                $imagePaths[] = $path;
+            }
+        } else {
+            $imagePaths = json_decode($product->images ?? '[]', true);
+        }
+
+
+        $sizeChartPath = $product->size_chart_image;
+        if ($request->hasFile('size_chart_image')) {
+            if ($sizeChartPath) {
+                Storage::disk('public')->delete($sizeChartPath);
+            }
+            $file = $request->file('size_chart_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $sizeChartPath = $file->storeAs('products/size_charts', $filename, 'public');
+        }
+
+        $product->update([
+            'sub_category_id' => $request->sub_category_id,
+            'product_name' => $request->product_name,
+            'images' => json_encode($imagePaths),
+            'sizes' => $request->sizes,
+            'colors' => $request->colors,
+            'actual_price' => $request->actual_price,
+            'selling_price' => $request->selling_price,
+            'description' => $request->description,
+            'information' => $request->information,
+            'size_chart_image' => $sizeChartPath,
+            'slug' => Str::slug($request->product_name),
+        ]);
+
+        return back()->with('success', 'Product updated successfully.');
+    }
+
+    public function deleteProduct($id){
+        $product = Product::find($id);
+        if ($product) {
+            $images = json_decode($product->images ?? '[]', true);
+            foreach ($images as $image) {
+                Storage::disk('public')->delete($image);
+            }
+            if ($product->size_chart_image) {
+                Storage::disk('public')->delete($product->size_chart_image);
+            }
+            $product->delete();
+            return back()->with('success', 'Product deleted successfully.');
+        }
+        return back()->with('error', 'Product not found.');
     }
 }

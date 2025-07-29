@@ -44,4 +44,6 @@ Route::middleware(['auth:admins'])->group(function () {
     // Products
     Route::get('/admin/products', [AdminController::class, 'productsView'])->name('admin.products');
     Route::post('/admin/products', [AdminController::class, 'addProduct'])->name('admin.product.store');
+    Route::post('/admin/product/update/{id}', [AdminController::class, 'editProduct'])->name('admin.product.update');
+    Route::post('/admin/product/delete/{id}', [AdminController::class, 'deleteProduct'])->name('admin.product.delete');
 });

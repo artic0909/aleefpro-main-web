@@ -274,7 +274,7 @@
                         <form action="{{ route('admin.product.store') }}" method="POST" class="modal-content" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-header">
-                                <h5 class="modal-title" id="scrollAddModalLabel">Add Products</h5>
+                                <h5 class="modal-title" id="scrollAddModalLabel">Add Product</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -286,7 +286,10 @@
                                 <div class="mt-3">
                                     <label for="main_category_name" class="form-label">Main Category<span class="text-danger">*</span></label>
                                     <select name="main_category_id" id="main_category_id" class="form-select">
+                                        <!-- existing main category show here-->
                                         <option value="" selected>Select Main Category</option>
+
+                                        <!-- normal main category drop down function like add product-->
                                         @foreach ($mainCategories as $mainCategory)
                                         <option value="{{ $mainCategory->id }}">{{ $mainCategory->main_category_name }}</option>
                                         @endforeach
@@ -296,7 +299,10 @@
                                 <div class="mt-3">
                                     <label for="sub_category_id" class="form-label">Sub Category<span class="text-danger">*</span></label>
                                     <select name="sub_category_id" id="sub_category_id" class="form-select">
+                                        <!-- existing sub category show here-->
                                         <option value="" selected>Select Sub Category</option>
+
+                                        <!-- normal sub category drop down function show using ajax like add product-->
 
                                     </select>
                                 </div>
@@ -353,6 +359,148 @@
                     </div>
                 </div>
 
+                <!-- Edit Modal -->
+                @foreach ($products as $product)
+                <div class="modal fade" id="scrollEditModal{{ $product->id }}" tabindex="-1" aria-labelledby="scrollEditModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                        <form action="{{ route('admin.product.update', $product->id) }}" method="POST" class="modal-content" enctype="multipart/form-data">
+                            @csrf
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="scrollEditModalLabel">Edit Product</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="">
+                                    <!-- show all images -->
+                                    @php
+                                    $images = json_decode($product->images);
+                                    @endphp
+
+                                    @if ($images && count($images) > 0)
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach ($images as $image)
+                                        <img src="{{ asset('storage/' . $image) }}" alt="Product Image" class="img-thumbnail" width="100" height="100">
+                                        @endforeach
+                                    </div>
+                                    @else
+                                    <p class="text-muted">No images available.</p>
+                                    @endif
+                                </div>
+                                <div class="mt-3">
+                                    <label for="image" class="form-label">Product Images<span class="text-danger">*</span></label>
+                                    <input type="file" name="images[]" id="images" class="form-control" multiple>
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="main_category_name" class="form-label">Main Category<span class="text-danger">*</span></label>
+                                    <select name="main_category_id" class="form-select main-category-select" data-product-id="{{ $product->id }}">
+                                        <option value="">Select Main Category</option>
+                                        @foreach ($mainCategories as $mainCategory)
+                                        <option value="{{ $mainCategory->id }}" {{ $mainCategory->id == $product->subCategory->main_category_id ? 'selected' : '' }}>
+                                            {{ $mainCategory->main_category_name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+
+
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="sub_category_id" class="form-label">Sub Category<span class="text-danger">*</span></label>
+                                    <select name="sub_category_id" id="sub_category_id_{{ $product->id }}" class="form-select sub-category-select">
+                                        <option value="">Select Sub Category</option>
+                                        @foreach ($subCategories as $subCategory)
+                                        @if ($subCategory->main_category_id == $product->subCategory->main_category_id)
+                                        <option value="{{ $subCategory->id }}" {{ $subCategory->id == $product->sub_category_id ? 'selected' : '' }}>
+                                            {{ $subCategory->sub_category_name }}
+                                        </option>
+                                        @endif
+                                        @endforeach
+                                    </select>
+
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="product_name" class="form-label">Product Name<span class="text-danger">*</span></label>
+                                    <input type="text" name="product_name" id="product_name" class="form-control" value="{{ $product->product_name }}">
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="sizes" class="form-label">Sizes<span class="text-danger">*</span></label>
+                                    <input type="text" name="sizes" id="sizes" class="form-control" value="{{ $product->sizes }}">
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="colors" class="form-label">Colors<span class="text-danger">*</span></label>
+                                    <input type="text" name="colors" id="colors" class="form-control" value="{{ $product->colors }}">
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="actual_price" class="form-label">Actual Price<span class="text-danger">*</span></label>
+                                    <input type="text" name="actual_price" id="actual_price" value="{{ $product->actual_price }}" class="form-control">
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="selling_price" class="form-label">Selling Price<span class="text-danger">*</span></label>
+                                    <input type="text" name="selling_price" id="selling_price" value="{{ $product->selling_price }}" class="form-control">
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+                                    <textarea name="description" id="description" class="form-control" rows="3">{{ $product->description }}</textarea>
+                                </div>
+
+
+                                <div class="mt-3">
+                                    <label for="information" class="form-label">Information<span class="text-danger">*</span></label>
+                                    <textarea name="information" id="information" class="form-control" rows="3">{{ $product->information }}</textarea>
+                                </div>
+
+                                <div class="mt-3">
+                                    <img src="{{ asset('storage/' . $product->size_chart_image) }}" alt="" class="img-fluid" width="100" height="100">
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="size_chart_image" class="form-label">Size Chart Image<span class="text-danger">*</span></label>
+                                    <input type="file" name="size_chart_image" id="size_chart_image" class="form-control">
+                                </div>
+
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                @endforeach
+
+                <!-- Delete Modal -->
+                 @foreach ($products as $product)
+                <div class="modal fade" id="scrollDeleteModal{{ $product->id }}" tabindex="-1" aria-labelledby="scrollDeleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form action="{{route('admin.product.delete', $product->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
+                            @csrf
+
+                            <div class="modal-body">
+                                <div>
+                                    <h2 class="text-danger">You want to this Product?</h2>
+                                    <h3>{{ $product->product_name }}</h3>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                @endforeach
+
 
 
 
@@ -405,6 +553,42 @@
             }
         });
     </script>
+
+
+    <script>
+        $(document).ready(function() {
+            // EDIT MODAL: Subcategory update based on main category
+            $('.main-category-select').on('change', function() {
+                let mainCategoryId = $(this).val();
+                let productId = $(this).data('product-id');
+                let subCategorySelect = $('#sub_category_id_' + productId);
+
+                subCategorySelect.empty().append('<option value="">Loading...</option>');
+
+                if (mainCategoryId) {
+                    $.ajax({
+                        url: "{{ route('getSubCategories') }}",
+                        type: "GET",
+                        data: {
+                            main_category_id: mainCategoryId
+                        },
+                        success: function(response) {
+                            subCategorySelect.empty().append('<option value="">Select Sub Category</option>');
+                            $.each(response.subcategories, function(key, subcategory) {
+                                subCategorySelect.append(
+                                    `<option value="${subcategory.id}">${subcategory.sub_category_name}</option>`
+                                );
+                            });
+                        },
+                        error: function() {
+                            subCategorySelect.empty().append('<option value="">Error loading data</option>');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
 
 
     <!-- plugins:js -->
