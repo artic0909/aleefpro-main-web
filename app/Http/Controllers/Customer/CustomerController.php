@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
 use App\Models\MainCategory;
 use App\Models\Offer;
+use App\Models\Product;
 use App\Models\ScrollBanners;
+use App\Models\SubCategory;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
@@ -115,11 +117,24 @@ class CustomerController extends Controller
     {
         $scrollingBanners = ScrollBanners::all();
         $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
         $offers = Offer::all();
+        $products = Product::with('subCategory', 'mainCategory')
+            ->inRandomOrder()
+            ->take(8)
+            ->get();
+
+        foreach ($products as $product) {
+            $decoded = json_decode($product->images, true);
+            $product->image = isset($decoded[0]) ? str_replace('\\/', '/', $decoded[0]) : null;
+        }
+
+
+
 
         if (Auth::guard('customers')->check()) {
-            return view('customer-home', compact('scrollingBanners', 'offers', 'maincategories'));
+            return view('customer-home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products'));
         }
-        return view('home', compact('scrollingBanners', 'offers', 'maincategories'));
+        return view('home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products'));
     }
 }

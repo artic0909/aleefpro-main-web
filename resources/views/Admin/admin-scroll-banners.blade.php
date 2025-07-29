@@ -195,6 +195,28 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/all-users">
+                            <i class="icon-paper menu-icon"></i>
+                            <span class="menu-title">Partners</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#form-elements1" aria-expanded="false" aria-controls="form-elements1">
+                            <i class="icon-columns menu-icon"></i>
+                            <span class="menu-title">Company Details</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="form-elements1">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"><a class="nav-link" href="/admin/faq">FAQ</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/admin/about-us">About Us</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/admin/social-handels">Social Handels</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
                 </ul>
             </nav>
             <!-- partial -->
@@ -292,7 +314,7 @@
                     <div class="modal-dialog">
                         <form action="{{route('admin.scroll-banner.delete', $banner->id)}}" method="POST" class="modal-content" enctype="multipart/form-data">
                             @csrf
-                            
+
                             <div class="modal-body">
                                 <div>
                                     <h2 class="text-danger">You want to this image?</h2>

@@ -287,6 +287,8 @@
       <span class="bg-secondary pr-3">Categories</span>
     </h2>
     <div class="row px-xl-5 pb-3">
+
+      @foreach($subCategories as $sub)
       <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
         <a class="text-decoration-none" href="products.html">
           <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
@@ -294,166 +296,16 @@
               <img class="img-fluid" src="img/category.webp" alt="" />
             </div>
             <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
+              <h4 class="m-0 p-0">{{$sub->sub_category_name}}</h4>
+              <small>{{$sub->mainCategory->main_category_name}}</small>
+              <p class="text-body p-0 m-0">{{$sub->products->count()}} Products</p>
             </div>
           </div>
         </a>
       </div>
+      @endforeach
 
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category2.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
 
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category3.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category4.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category5.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category6.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category7.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category8.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category9.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category10.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category11.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
-          <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-            <div class="overflow-hidden" style="width: 100px; height: 100px">
-              <img class="img-fluid" src="img/category12.webp" alt="" />
-            </div>
-            <div class="flex-fill pl-3">
-              <h5>HiVis Shirts</h5>
-              <span class="text-body">100 Products</span>
-            </div>
-          </div>
-        </a>
-      </div>
     </div>
   </div>
   <!-- Categories End -->
@@ -461,26 +313,18 @@
   <!-- Offer Start -->
   <div class="container-fluid pt-5 pb-3">
     <div class="row px-xl-5">
+      @foreach($offers as $offer)
       <div class="col-md-6">
         <div class="product-offer mb-30" style="height: 300px">
-          <img class="img-fluid" src="img/offer-1.jpg" alt="" />
+          <img class="img-fluid" src="{{ asset('storage/' . $offer->image) }}" alt="" />
           <div class="offer-text">
-            <h6 class="text-white text-uppercase">Save 20%</h6>
+            <h6 class="text-white text-uppercase">Save {{$offer->offer_percentage}}</h6>
             <h3 class="text-white mb-3">Special Offer</h3>
-            <a href="" class="btn btn-primary2">Shop Now</a>
+            <a href="{{$offer->link}}" class="btn btn-primary2">Shop Now</a>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="product-offer mb-30" style="height: 300px">
-          <img class="img-fluid" src="img/offer-2.jpg" alt="" />
-          <div class="offer-text">
-            <h6 class="text-white text-uppercase">Save 20%</h6>
-            <h3 class="text-white mb-3">Special Offer</h3>
-            <a href="" class="btn btn-primary2">Shop Now</a>
-          </div>
-        </div>
-      </div>
+      @endforeach
     </div>
   </div>
   <!-- Offer End -->
@@ -492,19 +336,20 @@
     </h2>
     <div class="row px-xl-5">
 
+      @foreach($products as $product)
       <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
         <div class="product-item bg-light mb-4">
           <div class="product-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="img/category.webp" alt="" />
+            
+          <img class="img-fluid w-100" src="{{ asset('storage/' . $product->image) }}" alt="" />
+
 
           </div>
           <div class="text-center py-4 p-3">
-            <a class="h6 text-decoration-none text-cl" href="">DV2183 Enhanced Visibility Identification HiVis Contrast
-              Mesh
-              Safety Vest</a>
+            <a class="h6 text-decoration-none text-cl" href="">{{$product->product_name}}</a>
             <div class="d-flex align-items-center justify-content-center mt-2">
-              <h5>₹999.00</h5>
-              <h6 class="text-muted ml-2"><del>₹1053.00</del></h6>
+              <h5>₹{{$product->selling_price}}</h5>
+              <h6 class="text-muted ml-2"><del>₹{{$product->actual_price}}</del></h6>
             </div>
             <div class="d-flex align-items-center justify-content-center mb-1">
               <small class="fa fa-star text-primary mr-1"></small>
@@ -526,6 +371,7 @@
           </div>
         </div>
       </div>
+      @endforeach
 
 
 
