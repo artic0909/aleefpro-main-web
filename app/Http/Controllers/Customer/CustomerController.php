@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\WelcomeCustomerMail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
+use App\Models\MainCategory;
+use App\Models\Offer;
 use App\Models\ScrollBanners;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
@@ -112,10 +114,12 @@ class CustomerController extends Controller
     public function homeView()
     {
         $scrollingBanners = ScrollBanners::all();
+        $maincategories = MainCategory::with('subCategory')->get();
+        $offers = Offer::all();
 
         if (Auth::guard('customers')->check()) {
-            return view('customer-home', compact('scrollingBanners'));
+            return view('customer-home', compact('scrollingBanners', 'offers', 'maincategories'));
         }
-        return view('home', compact('scrollingBanners'));
+        return view('home', compact('scrollingBanners', 'offers', 'maincategories'));
     }
 }

@@ -145,56 +145,24 @@
         <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light"
           id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999">
           <div class="navbar-nav w-100">
+            @foreach($maincategories as $main)
             <div class="nav-item dropdown dropright">
-              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Safety Vests<i
-                  class="fa fa-angle-right float-right mt-1"></i></a>
+              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                {{ $main->main_category_name }}
+                <i class="fa fa-angle-right float-right mt-1"></i>
+              </a>
               <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                <a href="" class="dropdown-item">HiVis Tape</a>
-                <a href="" class="dropdown-item">Contras Tape</a>
+                @foreach($main->subCategory as $sub)
+                <a href="" class="dropdown-item">
+                  {{ $sub->sub_category_name }}
+                </a>
+                @endforeach
               </div>
             </div>
-
-            <div class="nav-item dropdown dropright">
-              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Safety Vests<i
-                  class="fa fa-angle-right float-right mt-1"></i></a>
-              <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                <a href="" class="dropdown-item">Safety Shirts</a>
-                <a href="" class="dropdown-item">Contras Tape</a>
-              </div>
-            </div>
-
-            <div class="nav-item dropdown dropright">
-              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Safety Jackets<i
-                  class="fa fa-angle-right float-right mt-1"></i></a>
-              <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                <a href="" class="dropdown-item">HiVis Tape</a>
-                <a href="" class="dropdown-item">Contras Tape</a>
-              </div>
-            </div>
-
-            <div class="nav-item dropdown dropright">
-              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Rainwear Jackets<i
-                  class="fa fa-angle-right float-right mt-1"></i></a>
-              <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                <a href="" class="dropdown-item">HiVis Tape</a>
-                <a href="" class="dropdown-item">Contras Tape</a>
-              </div>
-            </div>
-
-            <div class="nav-item dropdown dropright">
-              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Safety Supplies<i
-                  class="fa fa-angle-right float-right mt-1"></i></a>
-              <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                <a href="" class="dropdown-item">HiVis Headwear</a>
-                <a href="" class="dropdown-item">HiVis Gearbags</a>
-                <a href="" class="dropdown-item">Safety Gloves</a>
-                <a href="" class="dropdown-item">Safety Glasses</a>
-                <a href="" class="dropdown-item">Sun Protection</a>
-                <a href="" class="dropdown-item">Colling Products</a>
-              </div>
-            </div>
+            @endforeach
           </div>
         </nav>
+
       </div>
       <div class="col-lg-9">
         <nav class="navbar navbar-expand-lg bg-blue navbar-dark py-3 py-lg-0 px-0">
@@ -253,22 +221,16 @@
         </div>
       </div>
       <div class="col-lg-4">
+        @foreach($offers as $offer)
         <div class="product-offer mb-30" style="height: 200px; border-radius: 10px;">
-          <img class="img-fluid" src="img/offer-1.jpg" alt="" />
+          <img class="img-fluid" src="{{ asset('storage/' . $offer->image) }}" alt="" />
           <div class="offer-text">
-            <h6 class="text-white text-uppercase">Save 20%</h6>
+            <h6 class="text-white text-uppercase">Save {{$offer->offer_percentage}}</h6>
             <h3 class="text-white mb-3">Special Offer</h3>
-            <a href="" class="btn btn-primary2 text-white" style="border-radius: 5px;">Shop Now</a>
+            <a href="{{$offer->link}}" class="btn btn-primary2 text-white" style="border-radius: 5px;">Shop Now</a>
           </div>
         </div>
-        <div class="product-offer mb-30" style="height: 200px; border-radius: 10px;">
-          <img class="img-fluid" src="img/offer-2.jpg" alt="" />
-          <div class="offer-text">
-            <h6 class="text-white text-uppercase">Save 20%</h6>
-            <h3 class="text-white mb-3">Special Offer</h3>
-            <a href="" class="btn btn-primary2 text-white" style="border-radius: 5px;">Shop Now</a>
-          </div>
-        </div>
+        @endforeach
       </div>
     </div>
   </div>
