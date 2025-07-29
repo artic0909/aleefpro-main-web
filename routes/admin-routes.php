@@ -35,7 +35,13 @@ Route::middleware(['auth:admins'])->group(function () {
 
     // Sub Category
     Route::get('/admin/sub-category', [AdminController::class, 'subCategoryView'])->name('admin.sub-category');
+    Route::get('/admin/get-sub-categories', [AdminController::class, 'getSubCategories'])->name('getSubCategories');
+
     Route::post('/admin/sub-category', [AdminController::class, 'addSubCategory'])->name('admin.sub-category.store');
     Route::put('/admin/sub-category/edit/{id}', [AdminController::class, 'editSubCategory'])->name('admin.sub-category.edit');
     Route::delete('/admin/sub-category/delete/{id}', [AdminController::class, 'deleteSubCategory'])->name('admin.sub-category.delete');
+
+    // Products
+    Route::get('/admin/products', [AdminController::class, 'productsView'])->name('admin.products');
+    Route::post('/admin/products', [AdminController::class, 'addProduct'])->name('admin.product.store');
 });

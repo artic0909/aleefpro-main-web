@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\MainCategory;
 use App\Models\Offer;
+use App\Models\Product;
 use App\Models\ScrollBanners;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
@@ -354,5 +355,69 @@ class AdminController extends Controller
         $subCategory->delete();
 
         return back()->with('success', 'Sub category deleted successfully!');
+    }
+
+    // Products==============================================================>
+    public function getSubCategories(Request $request)
+    {
+        $subcategories = SubCategory::where('main_category_id', $request->main_category_id)->get();
+        return response()->json(['subcategories' => $subcategories]);
+    }
+
+    public function productsView()
+    {
+       
+        $mainCategories = MainCategory::with('subCategories')->get();
+        $products = Product::with('subCategory')->get();
+        return view('admin.admin-products', compact('mainCategories', 'products'));
+    }
+
+
+    public function addProduct(Request $request)
+    {
+        $request->validate([
+            'sub_category_id' => 'required|exists:sub_categories,id',
+            'product_name' => 'required|string|max:255',
+            'images.*' => 'nullable|image',
+            'sizes' => 'nullable|string',
+            'colors' => 'nullable|string',
+            'actual_price' => 'required|numeric',
+            'selling_price' => 'required|numeric',
+            'description' => 'nullable|string',
+            'information' => 'nullable|string',
+            'size_chart_image' => 'nullable|image',
+        ]);
+
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('products/images', $filename, 'public');
+                $imagePaths[] = $path;
+            }
+        }
+
+        $sizeChartPath = null;
+        if ($request->hasFile('size_chart_image')) {
+            $file = $request->file('size_chart_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $sizeChartPath = $file->storeAs('products/size_charts', $filename, 'public');
+        }
+
+        Product::create([
+            'sub_category_id' => $request->sub_category_id,
+            'product_name' => $request->product_name,
+            'images' => json_encode($imagePaths),
+            'sizes' => $request->sizes,
+            'colors' => $request->colors,
+            'actual_price' => $request->actual_price,
+            'selling_price' => $request->selling_price,
+            'description' => $request->description,
+            'information' => $request->information,
+            'size_chart_image' => $sizeChartPath,
+            'slug' => Str::slug($request->product_name)
+        ]);
+
+        return back()->with('success', 'Product saved successfully.');
     }
 }
