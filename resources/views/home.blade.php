@@ -155,7 +155,7 @@
               </a>
               <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
                 @foreach($main->subCategory as $sub)
-                <a href="" class="dropdown-item">
+                <a href="{{ route('all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}" class="dropdown-item">
                   {{ $sub->sub_category_name }}
                 </a>
                 @endforeach
@@ -292,7 +292,7 @@
 
       @foreach($subCategories as $sub)
       <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <a class="text-decoration-none" href="products.html">
+        <a class="text-decoration-none" href="{{ route('all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}">
           <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
             <div class="overflow-hidden" style="width: 100px; height: 100px">
               <img class="img-fluid" src="img/category.webp" alt="" />

@@ -141,4 +141,25 @@ class CustomerController extends Controller
         }
         return view('home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners', 'socials'));
     }
+
+    public function allProductsView($mainSlug, $subSlug)
+    {
+
+        $mainCategory = MainCategory::where('slug', $mainSlug)->first();
+        if (!$mainCategory) {
+            abort(404, "Main category not found");
+        }
+
+        $subCategory = SubCategory::where('slug', $subSlug)
+            ->where('main_category_id', $mainCategory->id)
+            ->first();
+
+        if (!$subCategory) {
+            abort(404, "Sub category not found");
+        }
+
+        $products = Product::where('sub_category_id', $subCategory->id)->get();
+
+        return view('all-products', compact('mainCategory', 'subCategory', 'products'));
+    }
 }

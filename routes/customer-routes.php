@@ -13,6 +13,9 @@ Route::get('/about', [CustomerController::class, 'aboutView'])->name('customer.a
 
 Route::get('/', [CustomerController::class, 'homeView'])->name('home');
 
+Route::get('/products/{mainSlug}/{subSlug}', [CustomerController::class, 'allProductsView'])->name('all-products');
+
+
 
 Route::middleware(['auth:customers'])->group(function () {
 
