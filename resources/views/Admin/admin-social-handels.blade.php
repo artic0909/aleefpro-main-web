@@ -225,7 +225,7 @@
                     <div class="row">
                         <div class="card col-12">
                             <div class="card-body">
-                                <h4 class="card-title">FAQs</h4>
+                                <h4 class="card-title">Social Handels</h4>
 
                                 <div class="table-responsive">
                                     <table class="table table-hover">

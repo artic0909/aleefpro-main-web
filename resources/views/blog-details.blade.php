@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>{{ $mainCategory->main_category_name }} | {{ $subCategory->sub_category_name }}</title>
+    <title>{{$blog->blog_name}}</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="Free HTML Templates" name="keywords" />
     <meta content="Free HTML Templates" name="description" />
@@ -206,206 +206,108 @@
 <div class="container-fluid">
     <div class="row px-xl-5">
         <div class="col-12">
-            <img src="img/breadc.webp" class="img-fluid" width="100%" alt="" />
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="#">Home</a>
-                <a class="breadcrumb-item text-dark" href="#">{{ $mainCategory->main_category_name }}</a>
-                <span class="breadcrumb-item active">{{ $subCategory->sub_category_name }}</span>
+                <a class="breadcrumb-item text-dark" href="/blogs">Blogs</a>
+                <span class="breadcrumb-item active">{{$blog->blog_name}}</span>
             </nav>
         </div>
     </div>
 </div>
 <!-- Breadcrumb End -->
 
-<!-- Shop Start -->
+<!-- Blogs Start -->
 <div class="container-fluid">
     <div class="row px-xl-5">
         <!-- Shop Sidebar Start -->
         <div class="col-lg-3 col-md-4">
+
             <!-- Color Start -->
             <h5 class="section-title position-relative text-uppercase mb-3">
-                <span class="bg-secondary pr-3">Filter by color</span>
+                <span class="bg-secondary pr-3">Latest Post</span>
             </h5>
+            @if($lastOneBlog)
             <div class="bg-light p-4 mb-30">
-                <form>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" checked id="color-all" />
-                        <label class="custom-control-label" for="price-all">All Color</label>
-                        <span class="badge border font-weight-normal">1000</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-1" />
-                        <label class="custom-control-label" for="color-1">Black</label>
-                        <span class="badge border font-weight-normal">150</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-2" />
-                        <label class="custom-control-label" for="color-2">White</label>
-                        <span class="badge border font-weight-normal">295</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-3" />
-                        <label class="custom-control-label" for="color-3">Red</label>
-                        <span class="badge border font-weight-normal">246</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-4" />
-                        <label class="custom-control-label" for="color-4">Blue</label>
-                        <span class="badge border font-weight-normal">145</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" id="color-5" />
-                        <label class="custom-control-label" for="color-5">Green</label>
-                        <span class="badge border font-weight-normal">168</span>
-                    </div>
-                </form>
+                <div class="mb-3" style="width: 100%; height: 150px; overflow: hidden;">
+                    <img src="{{ asset('storage/' . $lastOneBlog->image) }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="">
+                </div>
+                <a class="h5 text-cl text-decoration-none" href="{{ route('blog-details', $lastOneBlog->slug) }}">{{ $lastOneBlog->blog_name }}</a>
+                <p><small class="font-weight-bold">Posted : {{ \Carbon\Carbon::parse($lastOneBlog->posted_date)->format('jS F Y') }}</small></p>
             </div>
+            @endif
             <!-- Color End -->
 
-            <!-- Size Start -->
-            <h5 class="section-title position-relative text-uppercase mb-3">
-                <span class="bg-secondary pr-3">Filter by size</span>
-            </h5>
-            <div class="bg-light p-4 mb-30">
-                <form>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" checked id="size-all" />
-                        <label class="custom-control-label" for="size-all">All Size</label>
-                        <span class="badge border font-weight-normal">1000</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-1" />
-                        <label class="custom-control-label" for="size-1">XS</label>
-                        <span class="badge border font-weight-normal">150</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-2" />
-                        <label class="custom-control-label" for="size-2">S</label>
-                        <span class="badge border font-weight-normal">295</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-3" />
-                        <label class="custom-control-label" for="size-3">M</label>
-                        <span class="badge border font-weight-normal">246</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-4" />
-                        <label class="custom-control-label" for="size-4">L</label>
-                        <span class="badge border font-weight-normal">145</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" id="size-5" />
-                        <label class="custom-control-label" for="size-5">XL</label>
-                        <span class="badge border font-weight-normal">168</span>
-                    </div>
-                </form>
-            </div>
-            <!-- Size End -->
         </div>
         <!-- Shop Sidebar End -->
 
         <!-- Shop Product Start -->
         <div class="col-lg-9 col-md-8">
             <div class="row pb-3">
-                <div class="col-12 pb-1">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div>
-                            <button class="btn btn-sm btn-light">
-                                <i class="fa fa-th-large"></i>
-                            </button>
-                            <button class="btn btn-sm btn-light ml-2">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
-                @forelse($products as $product)
-                @php
-                $images = json_decode($product->images, true);
-                $firstImage = isset($images[0]) ? str_replace('\/', '/', $images[0]) : null;
-                @endphp
-                <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-                    <div class="product-item bg-light mb-4">
+                <div class="col-lg-12 col-md-6 col-sm-6 pb-1">
+                    <div class="product-item bg-light mb-4 p-3">
                         <div class="product-img position-relative overflow-hidden">
-
-                            @if ($firstImage)
-                            <img class="img-fluid w-100" src="{{ asset('storage/' . $firstImage) }}" alt="{{ $product->product_name }}" />
-                            @endif
-
+                            <img class="img-fluid w-100" src="{{ asset('storage/' . $blog->image) }}" alt="" />
 
                         </div>
-                        <div class="py-4 p-3">
-                            <a class="h5 text-decoration-none text-cl" href="{{ route('product-details', [
-       'mainSlug' => $product->subCategory->mainCategory->slug,
-       'subSlug' => $product->subCategory->slug,
-       'productSlug' => $product->slug
-   ]) }}" style="text-align: start;">{{$product->product_name}}</a>
-                            <div class="d-flex align-items-center justify-content-start mt-2">
-                                <h6>Price: ₹{{$product->selling_price}}</h6>
-                                <h6 class="text-muted ml-2"><del>₹{{$product->actual_price}}</del></h6>
+                        <div class="text-left py-4 p-2">
+                            <p class="h2 text-decoration-none">{{$blog->blog_name}}</p>
+                            <p class="h7 text-decoration-none">{{$blog->description}}</p>
+
+
+
+
+                            <div class="d-flex justify-content-between ">
+                                <p class="font-weight-bold">Date : {{ \Carbon\Carbon::parse($lastOneBlog->posted_date)->format('jS F Y') }}</p>
+                                <p class="font-weight-bold">Posted by - Allef Pro</p>
                             </div>
 
-                            <div style="text-align: start;">
-                                <p class="text-muted m-0 p-0">Sizes: {{$product->sizes}}</p>
-                                <p class="text-muted m-0 p-0">Colors: {{$product->colors}}</p>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-center mt-3">
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                            </div>
-
-                            <div class="product-actions mt-3" style="display: flex; justify-content: space-evenly;">
-                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-
-                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
-
-                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa-solid fa-pen-to-square"></i></a>
-
-                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa-solid fa-circle-info"></i></a>
-                            </div>
                         </div>
                     </div>
                 </div>
-                @empty
-                <div class="col-12">
-                    <p>No products found under this category.</p>
-                </div>
-                @endforelse
 
 
-                <div class="col-12">
-                    <nav>
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#">Prev</a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">...</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">10</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
             </div>
         </div>
         <!-- Shop Product End -->
     </div>
 </div>
-<!-- Shop End -->
+<!-- Blogs End -->
+
+
+<!-- Others Blogs Start -->
+<div class="container-fluid py-5">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
+        <span class="bg-secondary pr-3">Recently Posted</span>
+    </h2>
+    <div class="row px-xl-5">
+        <div class="col">
+
+            <div class="owl-carousel related-carousel">
+
+                @foreach($blogs as $blog)
+                <div class="product-item bg-light mb-4">
+                    <div class="product-img position-relative overflow-hidden">
+                        <div class="mb-3" style="width: 100%; height: 150px; overflow: hidden;">
+                            <img src="{{ asset('storage/' . $blog->image) }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="">
+                        </div>
+
+                    </div>
+                    <div class="text-center py-4 p-2">
+                        <a class="h5 text-cl text-decoration-none" href="{{ route('blog-details', $blog->slug) }}">{{$blog->blog_name}}</a>
+                        <p><small class="font-weight-bold">Posted : {{ \Carbon\Carbon::parse($blog->posted_date)->format('jS F Y') }}</small></p>
+
+                    </div>
+                </div>
+                @endforeach
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Others Blogs End -->
+
+
 
 <!-- Footer Start -->
 @foreach($socials as $social)

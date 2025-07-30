@@ -10,6 +10,8 @@ use App\Models\MainCategory;
 use App\Models\Offer;
 use App\Models\Partner;
 use App\Models\Product;
+use App\Models\About;
+use App\Models\Blog;
 use App\Models\ScrollBanners;
 use App\Models\Social;
 use App\Models\SubCategory;
@@ -145,6 +147,8 @@ class CustomerController extends Controller
     public function allProductsView($mainSlug, $subSlug)
     {
 
+
+
         $mainCategory = MainCategory::where('slug', $mainSlug)->first();
         if (!$mainCategory) {
             abort(404, "Main category not found");
@@ -160,6 +164,95 @@ class CustomerController extends Controller
 
         $products = Product::where('sub_category_id', $subCategory->id)->get();
 
-        return view('all-products', compact('mainCategory', 'subCategory', 'products'));
+
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+
+
+        return view('all-products', compact('mainCategory', 'subCategory', 'products', 'offers', 'partners', 'socials', 'maincategories', 'subCategories'));
+    }
+
+    public function productDetailsView($mainSlug, $subSlug, $productSlug)
+    {
+
+        $mainCategory = MainCategory::where('slug', $mainSlug)->first();
+        if (!$mainCategory) {
+            abort(404, "Main category not found");
+        }
+
+        $subCategory = SubCategory::where('slug', $subSlug)
+            ->where('main_category_id', $mainCategory->id)
+            ->first();
+
+        if (!$subCategory) {
+            abort(404, "Sub category not found");
+        }
+
+        $product = Product::where('slug', $productSlug)
+            ->where('sub_category_id', $subCategory->id)
+            ->first();
+
+        if (!$product) {
+            abort(404, "Product not found");
+        }
+
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $allProducts = Product::with('subCategory', 'mainCategory')
+            ->inRandomOrder()
+            ->get();
+
+        return view('product-details', compact('mainCategory', 'subCategory', 'product', 'offers', 'partners', 'socials', 'maincategories', 'subCategories', 'allProducts'));
+    }
+
+    public function productCategoriesViews()
+    {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+
+        return view('products-categories', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
+    }
+
+    public function blogsView()
+    {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+        $blogs = Blog::all();
+        $lastOneBlog = Blog::latest()->first();
+
+        return view('blogs', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'blogs', 'lastOneBlog'));
+    }
+
+    public function blogDetailsView($blogSlug)
+    {
+        $blog = Blog::where('slug', $blogSlug)->first();
+        if (!$blog) {
+            abort(404, "Blog not found");
+        }
+
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+        $blogs = Blog::all();
+        $lastOneBlog = Blog::latest()->first();
+
+        return view('blog-details', compact('blog', 'maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'lastOneBlog', 'blogs'));
     }
 }

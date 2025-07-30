@@ -14,6 +14,11 @@ Route::get('/about', [CustomerController::class, 'aboutView'])->name('customer.a
 Route::get('/', [CustomerController::class, 'homeView'])->name('home');
 
 Route::get('/products/{mainSlug}/{subSlug}', [CustomerController::class, 'allProductsView'])->name('all-products');
+Route::get('/products-details/{mainSlug}/{subSlug}/{productSlug}', [CustomerController::class, 'productDetailsView'])->name('product-details');
+Route::get('/product-categories', [CustomerController::class, 'productCategoriesViews'])->name('product-categories');
+Route::get('/blogs', [CustomerController::class, 'blogsView'])->name('blogs');
+Route::get('/blog-details/{blogSlug}', [CustomerController::class, 'blogDetailsView'])->name('blog-details');
+
 
 
 
