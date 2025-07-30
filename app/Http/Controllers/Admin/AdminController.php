@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\About;
 use App\Models\Admin;
 use App\Models\Blog;
 use App\Models\Customer;
+use App\Models\Faq;
 use App\Models\MainCategory;
 use App\Models\Offer;
+use App\Models\Partner;
 use App\Models\Product;
 use App\Models\ScrollBanners;
+use App\Models\Social;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -599,5 +603,243 @@ class AdminController extends Controller
         $users->delete();
 
         return back()->with('success', 'User deleted successfully!');
+    }
+
+    // Partners==============================================================>
+    public function partnersView()
+    {
+
+        $partners = Partner::all();
+        return view('admin.admin-partners', compact('partners'));
+    }
+
+    public function addPartner(Request $request)
+    {
+
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp',
+        ]);
+        $partner = new Partner();
+        $partner->image = $request->file('image')->store('partners', 'public');
+        $partner->save();
+
+        return back()->with('success', 'Partner added successfully!');
+    }
+
+    public function editPartner(Request $request, $id)
+    {
+        $partner = Partner::findOrFail($id);
+
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($partner->image && Storage::disk('public')->exists($partner->image)) {
+                Storage::disk('public')->delete($partner->image);
+            }
+            $partner->image = $request->file('image')->store('partners', 'public');
+        }
+
+        $partner->save();
+
+        return back()->with('success', 'Partner updated successfully!');
+    }
+
+    public function deletePartner($id)
+    {
+        $partner = Partner::findOrFail($id);
+        if ($partner->image && Storage::disk('public')->exists($partner->image)) {
+            Storage::disk('public')->delete($partner->image);
+        }
+        $partner->delete();
+        return back()->with('success', 'Partner deleted successfully!');
+    }
+
+    // About Page =============================================================>
+    public function aboutView()
+    {
+        $abouts = About::all();
+        return view('admin.admin-about', compact('abouts'));
+    }
+
+    public function addAboutUs(Request $request)
+    {
+        $request->validate([
+            'breadcrumb' => 'nullable|image|mimes:jpeg,png,jpg,webp',
+            'side_image' => 'nullable|image|mimes:jpeg,png,jpg,webp',
+            'moto' => 'required',
+            'vision' => 'required',
+        ]);
+
+
+        About::create([
+            'breadcrumb' => $request->hasFile('breadcrumb') ? $request->file('breadcrumb')->store('abouts', 'public') : null,
+            'side_image' => $request->hasFile('side_image') ? $request->file('side_image')->store('abouts', 'public') : null,
+            'moto' => $request->moto,
+            'vision' => $request->vision,
+
+        ])->save();
+        return back()->with('success', 'About detaila added successfully!');
+    }
+
+    public function editAboutUs(Request $request, $id)
+    {
+        $about = About::findOrFail($id);
+
+        $request->validate([
+            'breadcrumb' => 'nullable|image|mimes:jpeg,png,jpg,webp',
+            'side_image' => 'nullable|image|mimes:jpeg,png,jpg,webp',
+            'moto' => 'required',
+            'vision' => 'required',
+        ]);
+
+        if ($request->hasFile('breadcrumb')) {
+            if ($about->breadcrumb && Storage::disk('public')->exists($about->breadcrumb)) {
+                Storage::disk('public')->delete($about->breadcrumb);
+            }
+            $about->breadcrumb = $request->file('breadcrumb')->store('abouts', 'public');
+        }
+
+        if ($request->hasFile('side_image')) {
+            if ($about->side_image && Storage::disk('public')->exists($about->side_image)) {
+                Storage::disk('public')->delete($about->side_image);
+            }
+            $about->side_image = $request->file('side_image')->store('abouts', 'public');
+        }
+
+        $about->moto = $request->moto;
+        $about->vision = $request->vision;
+        $about->save();
+
+        return back()->with('success', 'About detaila updated successfully!');
+    }
+
+    public function deleteAboutUs($id)
+    {
+        $about = About::findOrFail($id);
+        if ($about->breadcrumb && Storage::disk('public')->exists($about->breadcrumb)) {
+            Storage::disk('public')->delete($about->breadcrumb);
+        }
+        if ($about->side_image && Storage::disk('public')->exists($about->side_image)) {
+            Storage::disk('public')->delete($about->side_image);
+        }
+        $about->delete();
+        return back()->with('success', 'About detaila deleted successfully!');
+    }
+
+    // FAQ ====================================================================>
+    public function faqView()
+    {
+        $faqs = Faq::all();
+        return view('admin.admin-faq', compact('faqs'));
+    }
+
+    public function addFaq(Request $request)
+    {
+        $request->validate([
+            'question' => 'required',
+            'answer' => 'required',
+        ]);
+
+        Faq::create([
+            'question' => $request->question,
+            'answer' => $request->answer,
+        ])->save();
+
+        return back()->with('success', 'Faq added successfully!');
+    }
+
+    public function editFaq(Request $request, $id)
+    {
+        $faq = Faq::findOrFail($id);
+
+        $request->validate([
+            'question' => 'required',
+            'answer' => 'required',
+        ]);
+
+        $faq->question = $request->question;
+        $faq->answer = $request->answer;
+        $faq->save();
+
+        return back()->with('success', 'Faq updated successfully!');
+    }
+
+    public function deleteFaq($id)
+    {
+        $faq = Faq::findOrFail($id);
+        $faq->delete();
+        return back()->with('success', 'Faq deleted successfully!');
+    }
+
+    // Social ===========================================================>
+    public function socialView()
+    {
+        $socialHandels = Social::all();
+        return view('admin.admin-social-handels', compact('socialHandels'));
+    }
+
+    public function addSocial(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'mobile' => 'required|string|max:20',
+            'address' => 'required|string',
+            'link' => 'nullable|url',
+            'fb' => 'nullable|url',
+            'insta' => 'nullable|url',
+            'twitter' => 'nullable|url',
+            'linkedin' => 'nullable|url',
+        ]);
+
+        Social::create([
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'address' => $request->address,
+            'link' => $request->link,
+            'fb' => $request->fb,
+            'insta' => $request->insta,
+            'twitter' => $request->twitter,
+            'linkedin' => $request->linkedin,
+        ]);
+
+        return back()->with('success', 'Social handle added successfully!');
+    }
+
+    public function editSocial(Request $request, $id)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'mobile' => 'required|string|max:20',
+            'address' => 'required|string',
+            'link' => 'nullable|url',
+            'fb' => 'nullable|url',
+            'insta' => 'nullable|url',
+            'twitter' => 'nullable|url',
+            'linkedin' => 'nullable|url',
+        ]);
+
+        $social = Social::findOrFail($id);
+        $social->update([
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'address' => $request->address,
+            'link' => $request->link,
+            'fb' => $request->fb,
+            'insta' => $request->insta,
+            'twitter' => $request->twitter,
+            'linkedin' => $request->linkedin,
+        ]);
+
+        return back()->with('success', 'Social handle updated successfully!');
+    }
+
+    public function deleteSocial($id)
+    {
+        $social = Social::findOrFail($id);
+        $social->delete();
+
+        return back()->with('success', 'Social handle deleted successfully!');
     }
 }

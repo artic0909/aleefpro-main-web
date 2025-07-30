@@ -54,7 +54,30 @@ Route::middleware(['auth:admins'])->group(function () {
     Route::delete('/admin/blog/delete/{id}', [AdminController::class, 'deleteBlog'])->name('admin.blog.delete');
 
     // Customers
-        Route::get('admin/all-users', [AdminController::class, 'customersView'])->name('admin.user');
+    Route::get('admin/all-users', [AdminController::class, 'customersView'])->name('admin.user');
     Route::delete('admin/all-users/delete/{id}', [AdminController::class, 'deleteCustomer'])->name('admin.user.delete');
 
+    // Partners
+    Route::get('/admin/all-partners', [AdminController::class, 'partnersView'])->name('admin.partners');
+    Route::post('/admin/partner', [AdminController::class, 'addPartner'])->name('admin.partner.store');
+    Route::put('/admin/partner/update/{id}', [AdminController::class, 'editPartner'])->name('admin.partner.update');
+    Route::delete('/admin/partner/delete/{id}', [AdminController::class, 'deletePartner'])->name('admin.partner.delete');
+
+    // About Page Details
+    Route::get('/admin/about-us', [AdminController::class, 'aboutView'])->name('admin.about');
+    Route::post('/admin/about-us', [AdminController::class, 'addAboutUs'])->name('admin.about.store');
+    Route::put('/admin/about-us/update/{id}', [AdminController::class, 'editAboutUs'])->name('admin.about.update');
+    Route::delete('/admin/about-us/delete/{id}', [AdminController::class, 'deleteAboutUs'])->name('admin.about.delete');
+
+    // FAQ
+    Route::get('/admin/faq', [AdminController::class, 'faqView'])->name('admin.faq');
+    Route::post('/admin/faq', [AdminController::class, 'addFaq'])->name('admin.faq.store');
+    Route::put('/admin/faq/update/{id}', [AdminController::class, 'editFaq'])->name('admin.faq.update');
+    Route::delete('/admin/faq/delete/{id}', [AdminController::class, 'deleteFaq'])->name('admin.faq.delete');
+
+    // Social Media
+    Route::get('/admin/social-handels', [AdminController::class, 'socialView'])->name('admin.social');
+    Route::post('/admin/social-handel', [AdminController::class, 'addSocial'])->name('admin.social.store');
+    Route::put('/admin/social-handel/update/{id}', [AdminController::class, 'editSocial'])->name('admin.social.update');
+    Route::delete('/admin/social-handel/delete/{id}', [AdminController::class, 'deleteSocial'])->name('admin.social.delete');
 });
