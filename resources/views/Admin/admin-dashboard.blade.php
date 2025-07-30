@@ -160,7 +160,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/all-users">
+                        <a class="nav-link" href="/admin/all-partners">
                             <i class="icon-paper menu-icon"></i>
                             <span class="menu-title">Partners</span>
                         </a>
