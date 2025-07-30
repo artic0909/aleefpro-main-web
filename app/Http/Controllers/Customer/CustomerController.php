@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
 use App\Models\MainCategory;
 use App\Models\Offer;
+use App\Models\Partner;
 use App\Models\Product;
 use App\Models\ScrollBanners;
 use App\Models\SubCategory;
@@ -119,6 +120,9 @@ class CustomerController extends Controller
         $maincategories = MainCategory::with('subCategory')->get();
         $subCategories = SubCategory::with('products', 'mainCategory')->get();
         $offers = Offer::all();
+        $partners = Partner::all();
+
+
         $products = Product::with('subCategory', 'mainCategory')
             ->inRandomOrder()
             ->take(8)
@@ -130,11 +134,9 @@ class CustomerController extends Controller
         }
 
 
-
-
         if (Auth::guard('customers')->check()) {
-            return view('customer-home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products'));
+            return view('customer-home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners'));
         }
-        return view('home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products'));
+        return view('home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners'));
     }
 }

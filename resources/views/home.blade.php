@@ -386,35 +386,17 @@
     <div class="row px-xl-5">
       <div class="col">
         <div class="owl-carousel vendor-carousel">
+          @foreach($partners as $partner)
           <div class="bg-light p-4">
-            <img src="img/vendor-1.jpg" alt="" />
+            <img src="{{ asset('storage/' . $partner->image) }}" alt="" />
           </div>
-          <div class="bg-light p-4">
-            <img src="img/vendor-2.jpg" alt="" />
-          </div>
-          <div class="bg-light p-4">
-            <img src="img/vendor-3.jpg" alt="" />
-          </div>
-          <div class="bg-light p-4">
-            <img src="img/vendor-4.jpg" alt="" />
-          </div>
-          <div class="bg-light p-4">
-            <img src="img/vendor-5.jpg" alt="" />
-          </div>
-          <div class="bg-light p-4">
-            <img src="img/vendor-6.jpg" alt="" />
-          </div>
-          <div class="bg-light p-4">
-            <img src="img/vendor-7.jpg" alt="" />
-          </div>
-          <div class="bg-light p-4">
-            <img src="img/vendor-8.jpg" alt="" />
-          </div>
+          @endforeach
         </div>
       </div>
     </div>
   </div>
   <!-- Vendor End -->
+   
 
   <!-- Footer Start -->
   <div class="container-fluid bg-blue text-secondary mt-5 pt-5">
