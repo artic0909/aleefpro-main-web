@@ -11,6 +11,7 @@ use App\Models\Offer;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\ScrollBanners;
+use App\Models\Social;
 use App\Models\SubCategory;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
@@ -121,6 +122,7 @@ class CustomerController extends Controller
         $subCategories = SubCategory::with('products', 'mainCategory')->get();
         $offers = Offer::all();
         $partners = Partner::all();
+        $socials = Social::all();
 
 
         $products = Product::with('subCategory', 'mainCategory')
@@ -135,8 +137,8 @@ class CustomerController extends Controller
 
 
         if (Auth::guard('customers')->check()) {
-            return view('customer-home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners'));
+            return view('customer-home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners', 'socials'));
         }
-        return view('home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners'));
+        return view('home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners', 'socials'));
     }
 }

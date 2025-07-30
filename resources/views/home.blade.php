@@ -125,7 +125,9 @@
       </div>
       <div class="col-lg-4 col-6 text-right">
         <p class="m-0">Customer Service</p>
-        <h6 class="m-0">+012 345 6789</h6>
+        @foreach ($socials as $social)
+        <h6 class="m-0">+{{ $social->mobile }}</h6>
+        @endforeach
       </div>
     </div>
   </div>
@@ -340,8 +342,8 @@
       <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
         <div class="product-item bg-light mb-4">
           <div class="product-img position-relative overflow-hidden">
-            
-          <img class="img-fluid w-100" src="{{ asset('storage/' . $product->image) }}" alt="" />
+
+            <img class="img-fluid w-100" src="{{ asset('storage/' . $product->image) }}" alt="" />
 
 
           </div>
@@ -396,28 +398,28 @@
     </div>
   </div>
   <!-- Vendor End -->
-   
+
 
   <!-- Footer Start -->
+  @foreach($socials as $social)
   <div class="container-fluid bg-blue text-secondary mt-5 pt-5">
     <div class="row px-xl-5 pt-5">
       <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
         <img src="img/logo1.jpg" class="img-fluid fade-edges" width="400" alt="logo" />
         <p class="mb-2 mt-2">
-          <i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street,
-          New York, USA
+          <i class="fa fa-map-marker-alt text-primary mr-3"></i>{{$social->address}}
         </p>
         <p class="mb-2">
-          <i class="fa fa-envelope text-primary mr-3"></i>info@example.com
+          <i class="fa fa-envelope text-primary mr-3"></i>{{$social->email}}
         </p>
         <p class="mb-0">
-          <i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890
+          <i class="fa fa-phone text-primary mr-3"></i>{{$social->mobile}}
         </p>
       </div>
       <div class="col-lg-8 col-md-12">
         <div class="row">
           <div class="col-md-4 mb-5">
-            <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
+            <h5 class="text-secondary text-uppercase mb-4">Product Categories</h5>
             <div class="d-flex flex-column justify-content-start">
               <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
               <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
@@ -451,10 +453,10 @@
             </form>
             <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
             <div class="d-flex">
-              <a class="btn btn-primary2 btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-              <a class="btn btn-primary2 btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-              <a class="btn btn-primary2 btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-              <a class="btn btn-primary2 btn-square" href="#"><i class="fab fa-instagram"></i></a>
+              <a class="btn btn-primary2 btn-square mr-2" href="{{$social->twitter}}" target="_blank"><i class="fab fa-twitter"></i></a>
+              <a class="btn btn-primary2 btn-square mr-2" href="{{$social->fb}}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+              <a class="btn btn-primary2 btn-square mr-2" href="{{$social->linkedin}}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              <a class="btn btn-primary2 btn-square" href="{{$social->insta}}" target="_blank"><i class="fab fa-instagram"></i></a>
             </div>
           </div>
         </div>
@@ -473,6 +475,7 @@
       </div>
     </div>
   </div>
+  @endforeach
   <!-- Footer End -->
 
   <!-- Back to Top -->
