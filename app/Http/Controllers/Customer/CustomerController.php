@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ContactConfirmationMail;
+use App\Mail\CustomerCartEnquiryMail;
+use App\Mail\CustomerCartEnquiryRecieverMail;
 use App\Mail\WelcomeCustomerMail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
@@ -14,6 +16,7 @@ use App\Models\Product;
 use App\Models\About;
 use App\Models\Blog;
 use App\Models\Cart;
+use App\Models\CartEnquiry;
 use App\Models\Contact;
 use App\Models\Faq;
 use App\Models\ScrollBanners;
@@ -437,5 +440,70 @@ class CustomerController extends Controller
         $customerId = Auth::guard('customers')->id();
         Cart::where('customer_id', $customerId)->where('id', $request->cart_id)->delete();
         return redirect()->back()->with('success', 'Product removed from cart!');
+    }
+
+
+
+    public function submitCartEnquiry(Request $request)
+    {
+        $customerId = Auth::guard('customers')->id();
+        $customerEmail = Auth::guard('customers')->user()->email;
+        $customerName = Auth::guard('customers')->user()->name;
+
+        $cartItems = Cart::with('product')->where('customer_id', $customerId)->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+
+        $enquiryProducts = [];
+        $overallAmount = 0;
+
+        foreach ($cartItems as $item) {
+            $product = $item->product;
+            $totalAmount = $product->selling_price * $item->quantity;
+
+            $enquiryProducts[] = [
+                'product_name' => $product->product_name,
+                'product_code' => $product->product_code,
+                'product_color' => $item->color,
+                'product_rate' => $product->selling_price,
+                'enquiry_size' => $item->size,
+                'product_quantity' => $item->quantity,
+                'total_amount' => $totalAmount,
+            ];
+
+            $overallAmount += $totalAmount;
+        }
+
+        // Save the enquiry in DB
+        $enquiry = CartEnquiry::create([
+            'customer_id' => $customerId,
+            'customer_name' => $customerName,
+            'customer_email' => $customerEmail,
+            'enquiry_data' => json_encode($enquiryProducts),
+            'overall_amount' => $overallAmount,
+            'enquiry_date' => now()->toDateString(),
+        ]);
+
+        // Prepare data for email
+        $enquiryData = [
+            'customer_id' => $customerId,
+            'customer_email' => $customerEmail,
+            'customer_name' => $customerName,
+            'products' => $enquiryProducts,
+            'overall_amount' => $overallAmount,
+            'enquiry_date' => $enquiry->enquiry_date,
+        ];
+
+        // Send email
+        Mail::to('saklinmustakofficial@gmail.com')->send(new CustomerCartEnquiryMail($enquiryData));
+
+        Mail::to($customerEmail)->send(new CustomerCartEnquiryRecieverMail($enquiryData));
+
+        // Clear cart after enquiry
+        Cart::where('customer_id', $customerId)->delete();
+
+        return redirect()->back()->with('success', 'Enquiry submitted successfully!');
     }
 }

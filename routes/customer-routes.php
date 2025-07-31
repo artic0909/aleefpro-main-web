@@ -38,5 +38,8 @@ Route::middleware(['auth:customers'])->group(function () {
 
     Route::post('/customer/cart/remove', [CustomerController::class, 'removeFromCart'])->name('customer.cart.remove');
 
+    Route::post('/customer/submit-cart-enquiry', [CustomerController::class, 'submitCartEnquiry'])->name('customer.cart.enquiry');
+
+
     Route::get('/customer/logout', [CustomerController::class, 'logout'])->name('customer.logout');
 });

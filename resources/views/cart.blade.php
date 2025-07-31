@@ -376,9 +376,12 @@
                             </tbody>
                         </table>
 
-                        <button class="btn btn-block btn-primary2 font-weight-bold py-3">
-                            Send Enquiry
-                        </button>
+                        <form action="{{ route('customer.cart.enquiry') }}" method="POST" style="width: 100%" id="cartEnquiryForm">
+                            @csrf
+                            <button class="btn btn-block btn-primary2 font-weight-bold py-3 w-full">
+                                Send Enquiry
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
