@@ -29,6 +29,50 @@
   <!-- Customized Bootstrap Stylesheet -->
   <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
   <link href="{{ asset('css/serach-responsive.css') }}" rel="stylesheet">
+
+  <style>
+    .custom-success-popup,
+    .custom-error-popup {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 5px;
+      color: white;
+      z-index: 9999;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      animation: fadeInOut 4s ease-in-out forwards;
+    }
+
+    .custom-success-popup {
+      background-color: #4CAF50;
+    }
+
+    .custom-error-popup {
+      background-color: #f44336;
+    }
+
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      10% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -98,10 +142,17 @@
                 </div>
               </form>
 
-              <a href="" class="btn px-0">
+              @auth('customers')
+              <a href="/customer/cart" class="btn px-0">
+                <i class="fas fa-shopping-cart text-primary"></i>
+                <span class="badge text-danger border border-warning rounded-circle">{{$cartCount}}</span>
+              </a>
+              @else
+              <a href="/customer/cart" class="btn px-0">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge text-danger border border-warning rounded-circle">0</span>
               </a>
+              @endauth
             </div>
 
 
@@ -201,19 +252,24 @@
                 <i class="fas fa-user text-primary"></i>
                 <span class="badge text-success" style="padding-bottom: 2px">✔</span>
               </button>
+
+              <a href="/customer/cart" class="btn px-0 ml-3">
+                <i class="fas fa-shopping-cart text-primary"></i>
+                <span class="badge text-secondary border border-secondary rounded-circle"
+                  style="padding-bottom: 2px">{{$cartCount}}</span>
+              </a>
               @else
               <a href="/customer/login" class="btn px-0">
                 <i class="fas fa-user text-primary"></i>
                 <span class="badge text-warning" style="padding-bottom: 2px">X</span>
               </a>
-              @endauth
-
 
               <a href="/customer/cart" class="btn px-0 ml-3">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge text-secondary border border-secondary rounded-circle"
                   style="padding-bottom: 2px">0</span>
               </a>
+              @endauth
             </div>
           </div>
         </nav>
@@ -237,7 +293,6 @@
   <!-- Breadcrumb End -->
 
   <!-- Shop Detail Start -->
-
   <div class="container-fluid pb-5">
     <div class="row px-xl-5">
       <div class="col-lg-5 mb-30">
@@ -262,11 +317,12 @@
         </div>
       </div>
 
-      <form action="" method="POST" class="col-lg-7 h-auto mb-30">
+      <form action="{{ route('customer.cart.add') }}" method="POST" class="col-lg-7 h-auto mb-30">
         @csrf
 
         <div class="h-100 bg-light p-30">
 
+          <input type="hidden" name="product_id" value="{{ $product->id }}">
 
           <h3>{{$product->product_name}}</h3>
           <div class="d-flex mb-3">
@@ -285,30 +341,32 @@
           <!-- Size -->
           <div class="d-flex mb-3">
             <strong class="text-dark mr-3">Sizes:</strong>
-            <form>
+            <div>
               @php $sizes = explode(',', $product->sizes); @endphp
               @foreach ($sizes as $index => $size)
               <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" class="custom-control-input" id="size-{{ $index }}" name="size" />
+                <input type="radio" class="custom-control-input" id="size-{{ $index }}" name="size" value="{{ trim($size) }}">
                 <label class="custom-control-label" for="size-{{ $index }}">{{ strtoupper(trim($size)) }}</label>
               </div>
               @endforeach
 
-            </form>
+
+            </div>
           </div>
 
           <!-- Color -->
           <div class="d-flex mb-4">
             <strong class="text-dark mr-3">Colors:</strong>
-            <form>
+            <div>
               @php $colors = explode(',', $product->colors); @endphp
               @foreach ($colors as $index => $color)
               <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" class="custom-control-input" id="color-{{ $index }}" name="color" />
+                <input type="radio" class="custom-control-input" id="color-{{ $index }}" name="color" value="{{ trim($color) }}">
                 <label class="custom-control-label" for="color-{{ $index }}">{{ ucfirst(trim($color)) }}</label>
               </div>
               @endforeach
-            </form>
+
+            </div>
           </div>
 
 
@@ -319,13 +377,13 @@
             <!-- Quantity -->
             <div class="input-group quantity mr-3" style="width: 130px">
               <div class="input-group-btn">
-                <button class="btn btn-primary2 btn-minus">
+                <button type="button" class="btn btn-primary2 btn-minus">
                   <i class="fa fa-minus"></i>
                 </button>
               </div>
-              <input type="text" name="quantity" class="form-control bg-secondary border-0 text-center" value="10" />
+              <input type="text" name="quantity" class="form-control bg-secondary border-0 text-center" value="20" />
               <div class="input-group-btn">
-                <button class="btn btn-primary2 btn-plus">
+                <button type="button" class="btn btn-primary2 btn-plus">
                   <i class="fa fa-plus"></i>
                 </button>
               </div>
@@ -348,7 +406,7 @@
             </a>
           </div>
 
-
+          <!-- others things -->
           <div class="d-flex pt-2">
             <strong class="text-dark mr-2">Share on:</strong>
             <div class="d-inline-flex">
@@ -410,7 +468,6 @@
       </div>
     </div>
   </div>
-
   <!-- Shop Detail End -->
 
   <!-- Products Start -->
@@ -569,8 +626,35 @@
   @endforeach
   <!-- Footer End -->
 
+
+
+
+  @if (session('success'))
+  <div id="successPopup" class="custom-success-popup">
+    {{ session('success') }}
+  </div>
+  @endif
+
+  @if (session('error'))
+  <div id="errorPopup" class="custom-error-popup">
+    {{ session('error') }}
+  </div>
+  @endif
+
+
   <!-- Back to Top -->
   <a href="#" class="btn btn-primary2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const successPopup = document.getElementById('successPopup');
+      const errorPopup = document.getElementById('errorPopup');
+
+      if (successPopup) setTimeout(() => successPopup.remove(), 4000);
+      if (errorPopup) setTimeout(() => errorPopup.remove(), 4000);
+    });
+  </script>
 
   <!-- JavaScript Libraries -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

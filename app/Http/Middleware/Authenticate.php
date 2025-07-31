@@ -55,5 +55,7 @@ class Authenticate
         if (Route::is('admin.*')) {
             return route('admin.login');
         }
+
+        return route('home');
     }
 }

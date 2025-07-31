@@ -134,11 +134,17 @@
                                     </div>
                                 </div>
                             </form>
-
-                            <a href="" class="btn px-0">
+                            @auth('customers')
+                            <a href="/customer/cart" class="btn px-0">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-danger border border-warning rounded-circle">{{$cartCount}}</span>
+                            </a>
+                            @else
+                            <a href="/customer/cart" class="btn px-0">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-danger border border-warning rounded-circle">0</span>
                             </a>
+                            @endauth
                         </div>
 
 
@@ -238,19 +244,24 @@
                                 <i class="fas fa-user text-primary"></i>
                                 <span class="badge text-success" style="padding-bottom: 2px">✔</span>
                             </button>
+
+                            <a href="/customer/cart" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle"
+                                    style="padding-bottom: 2px">{{$cartCount}}</span>
+                            </a>
                             @else
                             <a href="/customer/login" class="btn px-0">
                                 <i class="fas fa-user text-primary"></i>
                                 <span class="badge text-warning" style="padding-bottom: 2px">X</span>
                             </a>
-                            @endauth
-
 
                             <a href="/customer/cart" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle"
                                     style="padding-bottom: 2px">0</span>
                             </a>
+                            @endauth
                         </div>
                     </div>
                 </nav>

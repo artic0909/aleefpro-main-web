@@ -13,6 +13,7 @@ use App\Models\Partner;
 use App\Models\Product;
 use App\Models\About;
 use App\Models\Blog;
+use App\Models\Cart;
 use App\Models\Contact;
 use App\Models\Faq;
 use App\Models\ScrollBanners;
@@ -39,7 +40,7 @@ class CustomerController extends Controller
     }
 
     public function registerView()
-    {   
+    {
         $maincategories = MainCategory::with('subCategory')->get();
         $subCategories = SubCategory::with('products', 'mainCategory')->get();
         $offers = Offer::all();
@@ -95,7 +96,7 @@ class CustomerController extends Controller
 
             if (Auth::guard('customers')->attempt($credentials)) {
                 $request->session()->regenerate();
-                return redirect()->route('home')->with('success', 'Login successful.');
+                return redirect()->intended(route('home'))->with('success', 'Login successful.');
             }
 
             // If credentials are incorrect
@@ -138,8 +139,11 @@ class CustomerController extends Controller
 
         $user = Auth::guard('customers')->user();
 
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
 
-        return view('about', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'user'));
+
+        return view('about', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'user', 'cartCount'));
     }
 
     public function homeView()
@@ -150,6 +154,8 @@ class CustomerController extends Controller
         $offers = Offer::all();
         $partners = Partner::all();
         $socials = Social::all();
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
 
 
         $products = Product::with('subCategory', 'mainCategory')
@@ -164,15 +170,13 @@ class CustomerController extends Controller
 
 
         if (Auth::guard('customers')->check()) {
-            return view('customer-home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners', 'socials'));
+            return view('customer-home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners', 'socials', 'cartCount'));
         }
-        return view('home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners', 'socials'));
+        return view('home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners', 'socials', 'cartCount'));
     }
 
     public function allProductsView($mainSlug, $subSlug)
     {
-
-
 
         $mainCategory = MainCategory::where('slug', $mainSlug)->first();
         if (!$mainCategory) {
@@ -195,9 +199,11 @@ class CustomerController extends Controller
         $offers = Offer::all();
         $partners = Partner::all();
         $socials = Social::all();
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
 
 
-        return view('all-products', compact('mainCategory', 'subCategory', 'products', 'offers', 'partners', 'socials', 'maincategories', 'subCategories'));
+        return view('all-products', compact('mainCategory', 'subCategory', 'products', 'offers', 'partners', 'socials', 'maincategories', 'subCategories', 'cartCount'));
     }
 
     public function productDetailsView($mainSlug, $subSlug, $productSlug)
@@ -229,11 +235,15 @@ class CustomerController extends Controller
         $offers = Offer::all();
         $partners = Partner::all();
         $socials = Social::all();
+
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
         $allProducts = Product::with('subCategory', 'mainCategory')
             ->inRandomOrder()
             ->get();
 
-        return view('product-details', compact('mainCategory', 'subCategory', 'product', 'offers', 'partners', 'socials', 'maincategories', 'subCategories', 'allProducts'));
+        return view('product-details', compact('mainCategory', 'subCategory', 'product', 'offers', 'partners', 'socials', 'maincategories', 'subCategories', 'allProducts', 'cartCount'));
     }
 
     public function productCategoriesViews()
@@ -245,7 +255,10 @@ class CustomerController extends Controller
         $socials = Social::all();
         $abouts = About::all();
 
-        return view('products-categories', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        return view('products-categories', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'cartCount'));
     }
 
     public function blogsView()
@@ -259,7 +272,10 @@ class CustomerController extends Controller
         $blogs = Blog::all();
         $lastOneBlog = Blog::latest()->first();
 
-        return view('blogs', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'blogs', 'lastOneBlog'));
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        return view('blogs', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'blogs', 'lastOneBlog', 'cartCount'));
     }
 
     public function blogDetailsView($blogSlug)
@@ -278,7 +294,10 @@ class CustomerController extends Controller
         $blogs = Blog::all();
         $lastOneBlog = Blog::latest()->first();
 
-        return view('blog-details', compact('blog', 'maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'lastOneBlog', 'blogs'));
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        return view('blog-details', compact('blog', 'maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'lastOneBlog', 'blogs', 'cartCount'));
     }
 
     public function faqView()
@@ -293,7 +312,10 @@ class CustomerController extends Controller
         $lastOneBlog = Blog::latest()->first();
         $faqs = Faq::all();
 
-        return view('faq', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'lastOneBlog', 'blogs', 'faqs'));
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        return view('faq', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'lastOneBlog', 'blogs', 'faqs', 'cartCount'));
     }
 
     public function contactView()
@@ -305,7 +327,10 @@ class CustomerController extends Controller
         $socials = Social::all();
         $abouts = About::all();
 
-        return view('contact', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        return view('contact', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'cartCount'));
     }
 
 
@@ -335,6 +360,82 @@ class CustomerController extends Controller
         $socials = Social::all();
         $abouts = About::all();
 
-        return view('cart', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
+        $customerId = Auth::guard('customers')->id();
+        $customer = Auth::guard('customers')->user();
+
+
+        $cartItems = Cart::with('product')
+            ->where('customer_id', $customerId)
+            ->get();
+
+        $totalQuantity = 0;
+        $totalRate = 0;
+        $totalAmount = 0;
+
+        foreach ($cartItems as $item) {
+            $qty = $item->quantity;
+            $price = $item->product->selling_price ?? 0;
+
+            $totalQuantity += $qty;
+            $totalRate += $price;
+            $totalAmount += $price * $qty;
+        }
+
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        return view('cart', compact(
+            'maincategories',
+            'subCategories',
+            'offers',
+            'partners',
+            'socials',
+            'abouts',
+            'cartItems',
+            'cartCount',
+            'customer',
+            'totalQuantity',
+            'totalRate',
+            'totalAmount'
+        ));
+    }
+
+
+    public function addToCart(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'size' => 'nullable|string',
+            'color' => 'nullable|string',
+        ]);
+
+        $customerId = Auth::guard('customers')->id();
+
+        $exists = Cart::where('customer_id', $customerId)
+            ->where('product_id', $request->product_id)
+            ->where('size', $request->size)
+            ->where('color', $request->color)
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'This product (same size & color) is already in your cart.');
+        }
+
+        Cart::create([
+            'customer_id' => $customerId,
+            'product_id' => $request->product_id,
+            'quantity' => $request->quantity,
+            'size' => $request->size,
+            'color' => $request->color,
+        ]);
+
+        return redirect()->back()->with('success', 'Product added to cart!');
+    }
+
+    public function removeFromCart(Request $request)
+    {
+        $customerId = Auth::guard('customers')->id();
+        Cart::where('customer_id', $customerId)->where('id', $request->cart_id)->delete();
+        return redirect()->back()->with('success', 'Product removed from cart!');
     }
 }

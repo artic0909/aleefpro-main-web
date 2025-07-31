@@ -33,6 +33,50 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/serach-responsive.css') }}" rel="stylesheet">
+
+    <style>
+        .custom-success-popup,
+        .custom-error-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            z-index: 9999;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeInOut 4s ease-in-out forwards;
+        }
+
+        .custom-success-popup {
+            background-color: #4CAF50;
+        }
+
+        .custom-error-popup {
+            background-color: #f44336;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -102,10 +146,17 @@
                                 </div>
                             </form>
 
-                            <a href="" class="btn px-0">
+                            @auth('customers')
+                            <a href="/customer/cart" class="btn px-0">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-danger border border-warning rounded-circle">{{$cartCount}}</span>
+                            </a>
+                            @else
+                            <a href="/customer/cart" class="btn px-0">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-danger border border-warning rounded-circle">0</span>
                             </a>
+                            @endauth
                         </div>
 
 
@@ -216,7 +267,7 @@
                             <a href="/customer/cart" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle"
-                                    style="padding-bottom: 2px">0</span>
+                                    style="padding-bottom: 2px">{{$cartCount}}</span>
                             </a>
                         </div>
                     </div>
@@ -232,15 +283,15 @@
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
                     <a class="breadcrumb-item text-dark" href="#">Your Cart List</a>
-                    <span class="breadcrumb-item active">User Name</span>
-                    <span class="breadcrumb-item active">xyz@gmail.com</span>
+                    <span class="breadcrumb-item active" style="text-transform: capitalize;">{{Auth::guard('customers')->user()->name}}</span>
+                    <span class="breadcrumb-item active">{{Auth::guard('customers')->user()->email}}</span>
                 </nav>
             </div>
         </div>
     </div>
     <!-- Breadcrumb End -->
 
-    <!-- Product Enquiry Start -->
+    <!-- Cart Items Start -->
     <div class="container-fluid">
         <div class="row px-xl-5">
             <div class="col-lg-8">
@@ -259,28 +310,43 @@
                                     <th>Quantity</th>
                                     <th>Rate</th>
                                     <th>Amount</th>
+                                    <th>Remove</th>
                                 </tr>
                             </thead>
 
                             <tbody>
+                                @if(count($cartItems) > 0)
+                                @foreach($cartItems as $items)
                                 <tr>
-                                    <td class="align-middle">Product Name</td>
-                                    <td class="align-middle">Code</td>
-                                    <td class="align-middle">Color</td>
-                                    <td class="align-middle">Size</td>
-                                    <td class="align-middle">Quantity</td>
-                                    <td class="align-middle">Rate</td>
-                                    <td class="align-middle">Amount</td>
+                                    <td class="align-middle">{{$items->product->product_name}}</td>
+                                    <td class="align-middle">{{$items->product->product_code}}</td>
+                                    <td class="align-middle">{{$items->color}}</td>
+                                    <td class="align-middle">{{$items->size}}</td>
+                                    <td class="align-middle">{{$items->quantity}}</td>
+                                    <td class="align-middle">₹ {{$items->product->selling_price}}.00</td>
+                                    <td class="align-middle">₹ {{$items->product->selling_price * $items->quantity}}.00</td>
+                                    <td class="align-middle" style="display: flex; justify-content: center; align-items: center;">
+                                        <form action="{{ route('customer.cart.remove') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="cart_id" value="{{ $items->id }}">
+                                            <button type="submit" class="btn btn-primary2">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+
+                                    </td>
                                 </tr>
+                                @endforeach
+                                @else
                                 <tr>
-                                    <td class="align-middle">Product Name</td>
-                                    <td class="align-middle">Code</td>
-                                    <td class="align-middle">Color</td>
-                                    <td class="align-middle">Size</td>
-                                    <td class="align-middle">Quantity</td>
-                                    <td class="align-middle">Rate</td>
-                                    <td class="align-middle">Amount</td>
+                                    <td
+                                        colspan="8"
+                                        style="font-size: 1.2rem; font-weight: bold">
+                                        No Items Found
+                                    </td>
                                 </tr>
+                                @endif
+
 
                                 <tr>
                                     <td
@@ -292,19 +358,19 @@
                                         id="totalQuantity"
                                         colspan="1"
                                         style="font-size: 1.2rem; font-weight: bold">
-                                        Total: 40
+                                        Qty: {{ $totalQuantity }}
                                     </td>
                                     <td
                                         id="totalRate"
                                         colspan="1"
                                         style="font-size: 1.2rem; font-weight: bold">
-                                        ₹ 400
+                                        ₹ {{ $totalRate }}.00
                                     </td>
                                     <td
                                         id="totalAmount"
-                                        colspan="1"
+                                        colspan="2"
                                         style="font-size: 1.2rem; font-weight: bold">
-                                        ₹ 4000
+                                        ₹ {{ $totalAmount }}.00
                                     </td>
                                 </tr>
                             </tbody>
@@ -388,7 +454,7 @@
             </div>
         </div>
     </div>
-    <!-- Product Enquiry End -->
+    <!-- Cart Items End -->
 
     <!-- Offer Start -->
     <div class="container-fluid pt-5 pb-3">
@@ -503,8 +569,33 @@
     </div>
     <!-- Footer End -->
 
+
+    @if (session('success'))
+    <div id="successPopup" class="custom-success-popup">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    @if (session('error'))
+    <div id="errorPopup" class="custom-error-popup">
+        {{ session('error') }}
+    </div>
+    @endif
+
+
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const successPopup = document.getElementById('successPopup');
+            const errorPopup = document.getElementById('errorPopup');
+
+            if (successPopup) setTimeout(() => successPopup.remove(), 4000);
+            if (errorPopup) setTimeout(() => errorPopup.remove(), 4000);
+        });
+    </script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

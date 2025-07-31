@@ -25,7 +25,7 @@ class RedirectIfAuthenticated
 
                 #for customers
                 if ($guard == 'customers' && Route::is('customer.*')) {
-                    return redirect()->route('home');
+                    return redirect()->route('customer*');
                 }
                 #for admins
                 elseif ($guard == 'admins' && Route::is('admin.*')) {

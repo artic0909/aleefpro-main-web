@@ -33,5 +33,10 @@ Route::get('/blog-details/{blogSlug}', [CustomerController::class, 'blogDetailsV
 Route::middleware(['auth:customers'])->group(function () {
 
     Route::get('/customer/cart', [CustomerController::class, 'cartView'])->name('customer.cart');
+
+    Route::post('/customer/cart/add', [CustomerController::class, 'addToCart'])->name('customer.cart.add');
+
+    Route::post('/customer/cart/remove', [CustomerController::class, 'removeFromCart'])->name('customer.cart.remove');
+
     Route::get('/customer/logout', [CustomerController::class, 'logout'])->name('customer.logout');
 });

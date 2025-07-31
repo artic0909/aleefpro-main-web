@@ -97,10 +97,17 @@
                             </div>
                         </form>
 
-                        <a href="" class="btn px-0">
+                        @auth('customers')
+                        <a href="/customer/cart" class="btn px-0">
+                            <i class="fas fa-shopping-cart text-primary"></i>
+                            <span class="badge text-danger border border-warning rounded-circle">{{$cartCount}}</span>
+                        </a>
+                        @else
+                        <a href="/customer/cart" class="btn px-0">
                             <i class="fas fa-shopping-cart text-primary"></i>
                             <span class="badge text-danger border border-warning rounded-circle">0</span>
                         </a>
+                        @endauth
                     </div>
 
 
@@ -200,19 +207,24 @@
                             <i class="fas fa-user text-primary"></i>
                             <span class="badge text-success" style="padding-bottom: 2px">✔</span>
                         </button>
+
+                        <a href="/customer/cart" class="btn px-0 ml-3">
+                            <i class="fas fa-shopping-cart text-primary"></i>
+                            <span class="badge text-secondary border border-secondary rounded-circle"
+                                style="padding-bottom: 2px">{{$cartCount}}</span>
+                        </a>
                         @else
                         <a href="/customer/login" class="btn px-0">
                             <i class="fas fa-user text-primary"></i>
                             <span class="badge text-warning" style="padding-bottom: 2px">X</span>
                         </a>
-                        @endauth
-
 
                         <a href="/customer/cart" class="btn px-0 ml-3">
                             <i class="fas fa-shopping-cart text-primary"></i>
                             <span class="badge text-secondary border border-secondary rounded-circle"
                                 style="padding-bottom: 2px">0</span>
                         </a>
+                        @endauth
                     </div>
                 </div>
             </nav>
@@ -249,7 +261,7 @@
                 <div class="mb-3" style="width: 100%; height: 150px; overflow: hidden;">
                     <img src="{{ asset('storage/' . $lastOneBlog->image) }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="">
                 </div>
-                <a class="h5 text-cl text-decoration-none" href="{{ route('blog-details', $lastOneBlog->slug) }}">{{ $lastOneBlog->blog_name }}</a>
+                <a class="h5 text-cl text-decoration-none" href="{{ route('customer.blog-details', $lastOneBlog->slug) }}">{{ $lastOneBlog->blog_name }}</a>
                 <p><small class="font-weight-bold">Posted : {{ \Carbon\Carbon::parse($lastOneBlog->posted_date)->format('jS F Y') }}</small></p>
             </div>
             @endif
@@ -312,7 +324,7 @@
 
                     </div>
                     <div class="text-center py-4 p-2">
-                        <a class="h5 text-cl text-decoration-none" href="{{ route('blog-details', $blog->slug) }}">{{$blog->blog_name}}</a>
+                        <a class="h5 text-cl text-decoration-none" href="{{ route('customer.blog-details', $blog->slug) }}">{{$blog->blog_name}}</a>
                         <p><small class="font-weight-bold">Posted : {{ \Carbon\Carbon::parse($blog->posted_date)->format('jS F Y') }}</small></p>
 
                     </div>
