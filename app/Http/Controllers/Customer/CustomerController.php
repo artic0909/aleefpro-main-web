@@ -135,10 +135,11 @@ class CustomerController extends Controller
         $partners = Partner::all();
         $socials = Social::all();
         $abouts = About::all();
-        $blogs = Blog::all();
-        $lastOneBlog = Blog::latest()->first();
 
-        return view('about', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'lastOneBlog', 'blogs'));
+        $user = Auth::guard('customers')->user();
+
+
+        return view('about', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'user'));
     }
 
     public function homeView()
