@@ -156,7 +156,7 @@
               </a>
               <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
                 @foreach($main->subCategory as $sub)
-                <a href="{{ route('all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}" class="dropdown-item">
+                <a href="{{ route('customer.all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}" class="dropdown-item">
                   {{ $sub->sub_category_name }}
                 </a>
                 @endforeach
@@ -243,8 +243,12 @@
         </div>
       </div>
 
-      <div class="col-lg-7 h-auto mb-30">
+      <form action="" method="POST" class="col-lg-7 h-auto mb-30">
+        @csrf
+
         <div class="h-100 bg-light p-30">
+
+
           <h3>{{$product->product_name}}</h3>
           <div class="d-flex mb-3">
             <div class="text-primary mr-2">
@@ -259,6 +263,7 @@
           <h6 class="text-muted"><del>₹{{ $product->actual_price }}</del></h6>
 
 
+          <!-- Size -->
           <div class="d-flex mb-3">
             <strong class="text-dark mr-3">Sizes:</strong>
             <form>
@@ -272,6 +277,8 @@
 
             </form>
           </div>
+
+          <!-- Color -->
           <div class="d-flex mb-4">
             <strong class="text-dark mr-3">Colors:</strong>
             <form>
@@ -284,28 +291,45 @@
               @endforeach
             </form>
           </div>
+
+
           <div class="d-flex align-items-center mb-4 pt-2">
+
+
+            
+            <!-- Quantity -->
             <div class="input-group quantity mr-3" style="width: 130px">
               <div class="input-group-btn">
                 <button class="btn btn-primary2 btn-minus">
                   <i class="fa fa-minus"></i>
                 </button>
               </div>
-              <input type="text" class="form-control bg-secondary border-0 text-center" value="10" />
+              <input type="text" name="quantity" class="form-control bg-secondary border-0 text-center" value="10" />
               <div class="input-group-btn">
                 <button class="btn btn-primary2 btn-plus">
                   <i class="fa fa-plus"></i>
                 </button>
               </div>
             </div>
+
+
+            <!-- Add to Cart Button -->
+            <button type="submit" class="btn btn-primary2 px-3">
+              <i class="fa fa-shopping-cart mr-1"></i>
+            </button>
+
+            &nbsp;&nbsp;&nbsp;
             <a href="product-enquiry.html" class="btn btn-primary2 px-3">
-              <i class="fa fa-shopping-cart mr-1"></i> Enquiry
+              <i class="fa fa-info-circle mr-1"></i> Enquiry
             </a>
+
             &nbsp;&nbsp;&nbsp;
             <a href="product-customize.html" class="btn btn-primary2 px-3">
               <i class="fa fa-pen-to-square mr-1"></i> Customize
             </a>
           </div>
+
+
           <div class="d-flex pt-2">
             <strong class="text-dark mr-2">Share on:</strong>
             <div class="d-inline-flex">
@@ -323,8 +347,15 @@
               </a>
             </div>
           </div>
+
+
         </div>
-      </div>
+        
+      </form>
+
+
+
+
     </div>
     <div class="row px-xl-5">
       <div class="col">
@@ -384,7 +415,7 @@
 
             </div>
             <div class="text-center py-4">
-              <a class="h5 text-decoration-none text-white" href="{{ route('product-details', [
+              <a class="h5 text-decoration-none text-white" href="{{ route('customer.product-details', [
        'mainSlug' => $product->subCategory->mainCategory->slug,
        'subSlug' => $product->subCategory->slug,
        'productSlug' => $product->slug

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactConfirmationMail;
 use App\Mail\WelcomeCustomerMail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
@@ -12,6 +13,8 @@ use App\Models\Partner;
 use App\Models\Product;
 use App\Models\About;
 use App\Models\Blog;
+use App\Models\Contact;
+use App\Models\Faq;
 use App\Models\ScrollBanners;
 use App\Models\Social;
 use App\Models\SubCategory;
@@ -25,14 +28,26 @@ class CustomerController extends Controller
     // Handles customer login and registration=========================================>
     public function loginView()
     {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
 
-        return view('login');
+        return view('login', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
     }
 
     public function registerView()
     {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
 
-        return view('register');
+        return view('register', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
     }
 
     public function register(Request $request)
@@ -114,7 +129,16 @@ class CustomerController extends Controller
     // About Page=======================================================>
     public function aboutView()
     {
-        return view('about');
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+        $blogs = Blog::all();
+        $lastOneBlog = Blog::latest()->first();
+
+        return view('about', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'lastOneBlog', 'blogs'));
     }
 
     public function homeView()
@@ -254,5 +278,62 @@ class CustomerController extends Controller
         $lastOneBlog = Blog::latest()->first();
 
         return view('blog-details', compact('blog', 'maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'lastOneBlog', 'blogs'));
+    }
+
+    public function faqView()
+    {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+        $blogs = Blog::all();
+        $lastOneBlog = Blog::latest()->first();
+        $faqs = Faq::all();
+
+        return view('faq', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'lastOneBlog', 'blogs', 'faqs'));
+    }
+
+    public function contactView()
+    {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+
+        return view('contact', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
+    }
+
+
+    public function contactFormSend(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        $contact = Contact::create($validated);
+
+        // Send confirmation mail to user
+        Mail::to($validated['email'])->send(new ContactConfirmationMail($validated));
+
+        return redirect()->route('customer.contact')->with('success', 'Your message has been sent successfully.');
+    }
+
+    public function cartView()
+    {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+
+        return view('cart', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
     }
 }

@@ -155,7 +155,7 @@
                         </a>
                         <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
                             @foreach($main->subCategory as $sub)
-                            <a href="{{ route('all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}" class="dropdown-item">
+                            <a href="{{ route('customer.all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}" class="dropdown-item">
                                 {{ $sub->sub_category_name }}
                             </a>
                             @endforeach
@@ -177,9 +177,9 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="/" class="nav-item nav-link active">Home</a>
+                        <a href="/" class="nav-item nav-link">Home</a>
                         <a href="/product-categories" class="nav-item nav-link">Products</a>
-                        <a href="/blogs" class="nav-item nav-link">Blogs</a>
+                        <a href="/blogs" class="nav-item nav-link active">Blogs</a>
                         <a href="/contact" class="nav-item nav-link">Contact</a>
                     </div>
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Product Ctaegories</title>
+    <title>FAQs</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -175,7 +175,7 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a href="/" class="nav-item nav-link">Home</a>
-                            <a href="/product-categories" class="nav-item nav-link active">Products</a>
+                            <a href="/product-categories" class="nav-item nav-link">Products</a>
                             <a href="/blogs" class="nav-item nav-link">Blogs</a>
                             <a href="/contact" class="nav-item nav-link">Contact</a>
                         </div>
@@ -201,86 +201,48 @@
 
 
     <!-- Breadcrumb Start -->
-    @foreach ($abouts as $about)
     <div class="container-fluid">
         <div class="row px-xl-5">
             <div class="col-12">
-                <img src="{{ asset('storage/' . $about->breadcrumb) }}" class="img-fluid" width="100%" alt="" />
                 <nav class="breadcrumb bg-light mb-30">
-                    <a class="breadcrumb-item text-dark" href="#">Home</a>
-                    <span class="breadcrumb-item active">Categories</span>
+                    <a class="breadcrumb-item text-dark" href="/">Aleef Pro</a>
+                    <span class="breadcrumb-item active">FAQs</span>
                 </nav>
             </div>
         </div>
     </div>
-    @endforeach
     <!-- Breadcrumb End -->
 
 
-    <!-- Categories Start -->
-    <div class="container-fluid pt-5">
-        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
-            <span class="bg-secondary pr-3">Categories</span>
-        </h2>
-
-        <div class="row px-xl-5 pb-3">
-
-
-            @foreach($subCategories as $sub)
-            <div class="col-lg-4 col-md-6 col-sm-8 pb-1">
-                <a class="text-decoration-none" href="{{ route('customer.all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}">
-                    <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-                        <div class="overflow-hidden" style="width: 100px; height: 100px">
-                            <img class="img-fluid" src="{{ asset('storage/' . $sub->image) }}" alt="" />
-                        </div>
-                        <div class="flex-fill pl-3">
-                            <h4 class="m-0 p-0">{{$sub->sub_category_name}}</h4>
-                            <small>{{$sub->mainCategory->main_category_name}}</small>
-                            <p class="text-body p-0 m-0">{{$sub->products->count()}} Products</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            @endforeach
-
-        </div>
-    </div>
-    <!-- Categories End -->
-
-
-
-    <!-- Offer Start -->
-    <div class="container-fluid pt-5 pb-3">
+    <!-- Contact Start -->
+    <div class="container-fluid">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span
+                class="bg-secondary pr-3">Frequently Asked Questions</span></h2>
         <div class="row px-xl-5">
-            @foreach($offers as $offer)
-            <div class="col-md-6">
-                <div class="product-offer mb-30" style="height: 300px">
-                    <img class="img-fluid" src="{{ asset('storage/' . $offer->image) }}" alt="" />
-                    <div class="offer-text">
-                        <h6 class="text-white text-uppercase">Save {{$offer->offer_percentage}}</h6>
-                        <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="{{$offer->link}}" class="btn btn-primary2">Shop Now</a>
+            <div class="col-lg-12 mb-5">
+                <div class="contact-form bg-light p-30">
+
+                    <!-- Accordion -->
+                    <div class="faq-accordion">
+
+                        @foreach($faqs as $faq)
+                        <div class="faq-item">
+                            <button class="faq-question">{{ $faq->question }}</button>
+                            <div class="faq-answer">
+                                <p>{{ $faq->answer }}</p>
+                            </div>
+                        </div>
+                        @endforeach
+
+
                     </div>
+
                 </div>
             </div>
-            @endforeach
+
         </div>
     </div>
-    <!-- Offer End -->
-
-
-
-
-    <!-- Breadcrumb Start -->
-    <div class="container-fluid">
-        <div class="row px-xl-5">
-            <div class="col-12">
-                <img src="img/customize-dummy-banner.webp" class="img-fluid" width="100%" alt="" />
-            </div>
-        </div>
-    </div>
-    <!-- Breadcrumb End -->
-
+    <!-- Contact End -->
 
 
     <!-- Footer Start -->
@@ -296,7 +258,7 @@
                     <i class="fa fa-envelope text-primary mr-3"></i>{{$social->email}}
                 </p>
                 <p class="mb-0">
-                    <i class="fa fa-phone-alt text-primary mr-3"></i>{{$social->mobile}}
+                    <i class="fa fa-phone text-primary mr-3"></i>{{$social->mobile}}
                 </p>
             </div>
             <div class="col-lg-8 col-md-12">
@@ -377,6 +339,32 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+
+    <script>
+        const questions = document.querySelectorAll('.faq-question');
+
+        questions.forEach(q => {
+            q.addEventListener('click', () => {
+                const isActive = q.classList.contains('active');
+
+                // Close all answers
+                document.querySelectorAll('.faq-answer').forEach(a => {
+                    a.style.maxHeight = null;
+                    a.style.paddingBottom = 0;
+                });
+                document.querySelectorAll('.faq-question').forEach(btn => btn.classList.remove('active'));
+
+                // Toggle current one
+                if (!isActive) {
+                    const answer = q.nextElementSibling;
+                    q.classList.add('active');
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    answer.style.paddingBottom = "15px";
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

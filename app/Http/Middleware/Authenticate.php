@@ -3,8 +3,11 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Route;
 
 class Authenticate
 {
@@ -13,17 +16,44 @@ class Authenticate
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ...$guards): Response
     {
-        return $next($request);
-    }
+        $guards = empty($guards) ? $guards = [null] : $guards;
 
-    protected function redirectTo($request): ?string
-    {
-        if ($request->is('admin') || $request->is('admin/*')) {
-            return route('admin.login');
+        foreach ($guards as $guard) {
+
+            #check guard is authenticated
+            if(Auth::guard($guard)->check()){
+
+                Auth::shouldUse($guard);
+                return $next($request);
+            }
         }
 
-        return route('login'); // fallback for other users
+
+        #handle unathenticated session
+        $this->unathenticated($guards);
+
+
+        
+    }
+
+
+    protected function unathenticated(array $guards) {
+        throw new AuthenticationException(
+            'Unauthenticated', $guards, $this->redirectTo()
+        );
+    }
+
+    protected function redirectTo()
+    {
+        #customer
+        if (Route::is('customer.*')) {
+            return route('customer.login');
+        }
+        #admin
+        if (Route::is('admin.*')) {
+            return route('admin.login');
+        }
     }
 }

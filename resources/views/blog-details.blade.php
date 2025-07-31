@@ -155,7 +155,7 @@
                         </a>
                         <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
                             @foreach($main->subCategory as $sub)
-                            <a href="{{ route('all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}" class="dropdown-item">
+                            <a href="{{ route('customer.all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}" class="dropdown-item">
                                 {{ $sub->sub_category_name }}
                             </a>
                             @endforeach

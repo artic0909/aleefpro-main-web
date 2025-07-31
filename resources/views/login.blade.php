@@ -19,12 +19,16 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="{{ asset('lib/animate/animate.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/serach-responsive.css" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/serach-responsive.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -33,15 +37,29 @@
         <div class="row bg-secondary py-1 px-xl-5">
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="d-inline-flex align-items-center h-100">
-                    <a class="text-body mr-3" href="about.html">About</a>
-                    <a class="text-body mr-3" href="contact.html">Contact</a>
-                    <a class="text-body mr-3" href="faq.html">FAQs</a>
+                    <a class="text-body mr-3" href="/about">About</a>
+                    <a class="text-body mr-3" href="/contact">Contact</a>
+                    <a class="text-body mr-3" href="/faq">FAQs</a>
                 </div>
             </div>
 
 
             <div class="col-lg-6 text-center text-lg-right">
                 <div class="d-inline-flex align-items-center">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa-regular fa-user"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+
+                            <a href="/login" class="dropdown-item" type="button">Login</a>
+                            <a href="/register" class="dropdown-item" type="button">Signup</a>
+
+                        </div>
+                    </div>
+
+                    &nbsp;
 
 
                     <div class="btn-group">
@@ -57,16 +75,25 @@
 
 
                     <div class="btn-group initial-hide">
-                        <form action="">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search for products" />
-                                <div class="input-group-append">
-                                    <span class="input-group-text bg-transparent text-primary">
-                                        <i class="fa fa-search"></i>
-                                    </span>
+                        <div style="display: flex; gap: 5px;">
+                            <form action="">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search for products" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text bg-transparent text-primary">
+                                            <i class="fa fa-search"></i>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+
+                            <a href="" class="btn px-0">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-danger border border-warning rounded-circle">0</span>
+                            </a>
+                        </div>
+
+
                     </div>
 
 
@@ -75,8 +102,8 @@
         </div>
         <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
             <div class="col-lg-4">
-                <a href="index.html" class="text-decoration-none d-flex align-items-center">
-                    <img src="img/logo1.webp" class="img-fluid" width="55" alt="logo" />
+                <a href="/" class="text-decoration-none d-flex align-items-center">
+                    <img src="{{asset('img/logo1.webp')}}" class="img-fluid" width="55" alt="logo" />
                     <div class="">
                         <span class="h1 text-uppercase text-white bg-org px-2">Aleef</span>
                         <span class="h1 text-uppercase text-white bg-blue px-2 ml-n1">Pro</span>
@@ -94,10 +121,14 @@
                         </div>
                     </div>
                 </form>
+
+
             </div>
             <div class="col-lg-4 col-6 text-right">
                 <p class="m-0">Customer Service</p>
-                <h5 class="m-0">+012 345 6789</h5>
+                @foreach ($socials as $social)
+                <h6 class="m-0">+{{ $social->mobile }}</h6>
+                @endforeach
             </div>
         </div>
     </div>
@@ -107,8 +138,8 @@
     <div class="container-fluid bg-blue mb-30">
         <div class="row px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-                <a class="btn d-flex align-items-center justify-content-between bg-org text-white w-100"
-                    data-toggle="collapse" href="#navbar-vertical" style="height: 65px; padding: 0 30px">
+                <a class="btn d-flex align-items-center justify-content-between bg-org text-white w-100" data-toggle="collapse"
+                    href="#navbar-vertical" style="height: 65px; padding: 0 30px">
                     <h6 class="text-white m-0">
                         <i class="fa fa-bars mr-2"></i>Categories
                     </h6>
@@ -117,60 +148,28 @@
                 <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light"
                     id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999">
                     <div class="navbar-nav w-100">
+                        @foreach($maincategories as $main)
                         <div class="nav-item dropdown dropright">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Safety Vests<i
-                                    class="fa fa-angle-right float-right mt-1"></i></a>
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                {{ $main->main_category_name }}
+                                <i class="fa fa-angle-right float-right mt-1"></i>
+                            </a>
                             <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                <a href="" class="dropdown-item">HiVis Tape</a>
-                                <a href="" class="dropdown-item">Contras Tape</a>
+                                @foreach($main->subCategory as $sub)
+                                <a href="{{ route('customer.all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}" class="dropdown-item">
+                                    {{ $sub->sub_category_name }}
+                                </a>
+                                @endforeach
                             </div>
                         </div>
-
-                        <div class="nav-item dropdown dropright">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Safety Vests<i
-                                    class="fa fa-angle-right float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                <a href="" class="dropdown-item">Safety Shirts</a>
-                                <a href="" class="dropdown-item">Contras Tape</a>
-                            </div>
-                        </div>
-
-                        <div class="nav-item dropdown dropright">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Safety Jackets<i
-                                    class="fa fa-angle-right float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                <a href="" class="dropdown-item">HiVis Tape</a>
-                                <a href="" class="dropdown-item">Contras Tape</a>
-                            </div>
-                        </div>
-
-                        <div class="nav-item dropdown dropright">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Rainwear Jackets<i
-                                    class="fa fa-angle-right float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                <a href="" class="dropdown-item">HiVis Tape</a>
-                                <a href="" class="dropdown-item">Contras Tape</a>
-                            </div>
-                        </div>
-
-                        <div class="nav-item dropdown dropright">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Safety Supplies<i
-                                    class="fa fa-angle-right float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                <a href="" class="dropdown-item">HiVis Headwear</a>
-                                <a href="" class="dropdown-item">HiVis Gearbags</a>
-                                <a href="" class="dropdown-item">Safety Gloves</a>
-                                <a href="" class="dropdown-item">Safety Glasses</a>
-                                <a href="" class="dropdown-item">Sun Protection</a>
-                                <a href="" class="dropdown-item">Colling Products</a>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </nav>
+
             </div>
             <div class="col-lg-9">
                 <nav class="navbar navbar-expand-lg bg-blue navbar-dark py-3 py-lg-0 px-0">
-                    <a href="" class="text-decoration-none d-block d-lg-none">
+                    <a href="/" class="text-decoration-none d-block d-lg-none">
                         <span class="h1 text-uppercase text-white bg-org px-2">Aleef</span>
                         <span class="h1 text-uppercase text-white bg-blue px-2 ml-n1">Pro</span>
                     </a>
@@ -179,17 +178,18 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
-                            <a href="index.html" class="nav-item nav-link">Home</a>
-                            <a href="product-categories.html" class="nav-item nav-link">Products</a>
-                            <a href="blogs.html" class="nav-item nav-link">Blogs</a>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a href="/" class="nav-item nav-link">Home</a>
+                            <a href="/product-categories" class="nav-item nav-link">Products</a>
+                            <a href="/blogs" class="nav-item nav-link active">Blogs</a>
+                            <a href="/contact" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                            <a href="" class="btn px-0">
-                                <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle"
-                                    style="padding-bottom: 2px">0</span>
+
+                            <a href="/login" class="btn px-0">
+                                <i class="fas fa-user text-primary"></i>
+                                <span class="badge text-warning" style="padding-bottom: 2px">X</span>
                             </a>
+
                             <a href="" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle"
@@ -204,12 +204,13 @@
     <!-- Navbar End -->
 
 
+
     <!-- Breadcrumb Start -->
     <div class="container-fluid">
         <div class="row px-xl-5">
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
-                    <a class="breadcrumb-item text-dark" href="#">Aleef Pro</a>
+                    <a class="breadcrumb-item text-dark" href="/">Aleef Pro</a>
                     <span class="breadcrumb-item active">Login Now</span>
                 </nav>
             </div>
@@ -366,15 +367,13 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="{{ asset('lib/easing/easing.min.js') }}"></script>
+    <script src="{{ asset('lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
-    <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
+
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
 </body>
 
 </html>

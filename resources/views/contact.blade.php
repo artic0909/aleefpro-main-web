@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Product Ctaegories</title>
+    <title>Contact Us</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -25,6 +25,43 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
     <link href="css/serach-responsive.css" rel="stylesheet">
+
+    <style>
+        .custom-success-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            animation: fadeInOut 4s ease-in-out forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+
 </head>
 
 <body>
@@ -175,7 +212,7 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a href="/" class="nav-item nav-link">Home</a>
-                            <a href="/product-categories" class="nav-item nav-link active">Products</a>
+                            <a href="/product-categories" class="nav-item nav-link">Products</a>
                             <a href="/blogs" class="nav-item nav-link">Blogs</a>
                             <a href="/contact" class="nav-item nav-link">Contact</a>
                         </div>
@@ -201,86 +238,91 @@
 
 
     <!-- Breadcrumb Start -->
-    @foreach ($abouts as $about)
     <div class="container-fluid">
         <div class="row px-xl-5">
             <div class="col-12">
-                <img src="{{ asset('storage/' . $about->breadcrumb) }}" class="img-fluid" width="100%" alt="" />
                 <nav class="breadcrumb bg-light mb-30">
-                    <a class="breadcrumb-item text-dark" href="#">Home</a>
-                    <span class="breadcrumb-item active">Categories</span>
+                    <a class="breadcrumb-item text-dark" href="/">Aleef Pro</a>
+                    <span class="breadcrumb-item active">Contact Us</span>
                 </nav>
             </div>
         </div>
     </div>
-    @endforeach
     <!-- Breadcrumb End -->
 
 
-    <!-- Categories Start -->
-    <div class="container-fluid pt-5">
-        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
-            <span class="bg-secondary pr-3">Categories</span>
-        </h2>
-
-        <div class="row px-xl-5 pb-3">
-
-
-            @foreach($subCategories as $sub)
-            <div class="col-lg-4 col-md-6 col-sm-8 pb-1">
-                <a class="text-decoration-none" href="{{ route('customer.all-products', ['mainSlug' => $sub->mainCategory->slug, 'subSlug' => $sub->slug]) }}">
-                    <div class="cat-item d-flex align-items-center mb-4" style="box-shadow: 0 0 10px #d8d8d8">
-                        <div class="overflow-hidden" style="width: 100px; height: 100px">
-                            <img class="img-fluid" src="{{ asset('storage/' . $sub->image) }}" alt="" />
-                        </div>
-                        <div class="flex-fill pl-3">
-                            <h4 class="m-0 p-0">{{$sub->sub_category_name}}</h4>
-                            <small>{{$sub->mainCategory->main_category_name}}</small>
-                            <p class="text-body p-0 m-0">{{$sub->products->count()}} Products</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            @endforeach
-
-        </div>
-    </div>
-    <!-- Categories End -->
-
-
-
-    <!-- Offer Start -->
-    <div class="container-fluid pt-5 pb-3">
+    <!-- Contact Start -->
+    <div class="container-fluid">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Contact
+                Us</span></h2>
         <div class="row px-xl-5">
-            @foreach($offers as $offer)
-            <div class="col-md-6">
-                <div class="product-offer mb-30" style="height: 300px">
-                    <img class="img-fluid" src="{{ asset('storage/' . $offer->image) }}" alt="" />
-                    <div class="offer-text">
-                        <h6 class="text-white text-uppercase">Save {{$offer->offer_percentage}}</h6>
-                        <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="{{$offer->link}}" class="btn btn-primary2">Shop Now</a>
-                    </div>
+            <div class="col-lg-7 mb-5">
+                <div class="contact-form bg-light p-30">
+                    <div id="errorsShowHere"></div>
+                    <form action="{{ route('customer.contact.send') }}" method="post" novalidate="novalidate">
+                        @csrf
+                        <div class="control-group">
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Your Name"
+                                required="required" data-validation-required-message="Please enter your name" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="control-group">
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email"
+                                required="required" data-validation-required-message="Please enter your email" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="control-group">
+                            <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject"
+                                required="required" data-validation-required-message="Please enter a subject" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="control-group">
+                            <textarea class="form-control" rows="8" name="message" id="message" placeholder="Message"
+                                required="required"
+                                data-validation-required-message="Please enter your message"></textarea>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary2 py-2 px-4" type="submit">Send
+                                Message</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            @endforeach
-        </div>
-    </div>
-    <!-- Offer End -->
-
-
-
-
-    <!-- Breadcrumb Start -->
-    <div class="container-fluid">
-        <div class="row px-xl-5">
-            <div class="col-12">
-                <img src="img/customize-dummy-banner.webp" class="img-fluid" width="100%" alt="" />
+            <div class="col-lg-5 mb-5">
+                <div class="bg-light p-30 mb-30">
+                    <iframe style="width: 100%; height: 250px;"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3001156.4288297426!2d-78.01371936852176!3d42.72876761954724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4ccc4bf0f123a5a9%3A0xddcfc6c1de189567!2sNew%20York%2C%20USA!5e0!3m2!1sen!2sbd!4v1603794290143!5m2!1sen!2sbd"
+                        frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                </div>
+                @foreach($socials as $social)
+                <div class="bg-light p-30 mb-3">
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>{{$social->address}}</p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>{{$social->email}}</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt text-primary mr-3"></i>+{{$social->mobile}}</p>
+                </div>
+                @endforeach
             </div>
         </div>
     </div>
-    <!-- Breadcrumb End -->
+    <!-- Contact End -->
 
+
+    @if ($errors->any())
+    <div class="alert alert-danger" id="errorsShowHere">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    
+    @if (session('success'))
+    <div id="successPopup" class="custom-success-popup">
+        {{ session('success') }}
+    </div>
+    @endif
 
 
     <!-- Footer Start -->
@@ -363,6 +405,20 @@
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const popup = document.getElementById('successPopup');
+            if (popup) {
+                setTimeout(() => {
+                    popup.remove();
+                }, 4000); // Matches CSS animation duration
+            }
+        });
+    </script>
+
+
 
 
     <!-- JavaScript Libraries -->
