@@ -52,8 +52,8 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right">
 
-              <a href="/login" class="dropdown-item" type="button">Login</a>
-              <a href="/register" class="dropdown-item" type="button">Signup</a>
+              <a href="/customer/login" class="dropdown-item" type="button">Login</a>
+              <a href="/customer/register" class="dropdown-item" type="button">Signup</a>
 
             </div>
           </div>
@@ -184,7 +184,7 @@
             </div>
             <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
 
-              <a href="/login" class="btn px-0">
+              <a href="/customer/login" class="btn px-0">
                 <i class="fas fa-user text-primary"></i>
                 <span class="badge text-warning" style="padding-bottom: 2px">X</span>
               </a>

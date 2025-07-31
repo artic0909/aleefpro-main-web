@@ -52,8 +52,8 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
 
-                        <a href="/login" class="dropdown-item" type="button">Login</a>
-                        <a href="/register" class="dropdown-item" type="button">Signup</a>
+                        <a href="/customer/login" class="dropdown-item" type="button">Login</a>
+                        <a href="/customer/register" class="dropdown-item" type="button">Signup</a>
 
                     </div>
                 </div>
@@ -177,14 +177,14 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
-                        <a href="/" class="nav-item nav-link active">Home</a>
-                        <a href="/product-categories" class="nav-item nav-link">Products</a>
+                        <a href="/" class="nav-item nav-link">Home</a>
+                        <a href="/product-categories" class="nav-item nav-link active">Products</a>
                         <a href="/blogs" class="nav-item nav-link">Blogs</a>
                         <a href="/contact" class="nav-item nav-link">Contact</a>
                     </div>
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
 
-                        <a href="/login" class="btn px-0">
+                        <a href="/customer/login" class="btn px-0">
                             <i class="fas fa-user text-primary"></i>
                             <span class="badge text-warning" style="padding-bottom: 2px">X</span>
                         </a>

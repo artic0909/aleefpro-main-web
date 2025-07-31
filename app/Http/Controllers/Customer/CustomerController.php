@@ -39,7 +39,7 @@ class CustomerController extends Controller
     }
 
     public function registerView()
-    {
+    {   
         $maincategories = MainCategory::with('subCategory')->get();
         $subCategories = SubCategory::with('products', 'mainCategory')->get();
         $offers = Offer::all();

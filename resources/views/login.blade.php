@@ -53,8 +53,8 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
 
-                            <a href="/login" class="dropdown-item" type="button">Login</a>
-                            <a href="/register" class="dropdown-item" type="button">Signup</a>
+                            <a href="/customer/login" class="dropdown-item" type="button">Login</a>
+                            <a href="/customer/register" class="dropdown-item" type="button">Signup</a>
 
                         </div>
                     </div>
@@ -180,12 +180,12 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href="/" class="nav-item nav-link">Home</a>
                             <a href="/product-categories" class="nav-item nav-link">Products</a>
-                            <a href="/blogs" class="nav-item nav-link active">Blogs</a>
+                            <a href="/blogs" class="nav-item nav-link">Blogs</a>
                             <a href="/contact" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
 
-                            <a href="/login" class="btn px-0">
+                            <a href="/customer/login" class="btn px-0">
                                 <i class="fas fa-user text-primary"></i>
                                 <span class="badge text-warning" style="padding-bottom: 2px">X</span>
                             </a>
@@ -258,17 +258,18 @@
                         </div>
 
                         <div class="text-center mt-2" style="display: flex; justify-content: space-between;">
-                            <small>You don't have an account? <a href="/register" class="font-weight-bold" style="text-decoration: underline !important;">Signup</a></small>
+                            <small>You don't have an account? <a href="/customer/register" class="font-weight-bold" style="text-decoration: underline !important;">Signup</a></small>
                             <small>Forget Password? <a href="" class="font-weight-bold" style="text-decoration: underline !important;">Reset</a></small>
                         </div>
                     </form>
                 </div>
-
+                @foreach($socials as $social)
                 <div class="bg-light p-30 mt-4">
-                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>{{$social->address}}</p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>{{$social->email}}</p>
+                    <p class="mb-2"><i class="fa fa-phone text-primary mr-3"></i>{{$social->mobile}}</p>
                 </div>
+                @endforeach
             </div>
             <div class="col-lg-5 mb-5">
                 <div class="bg-light p-30 mb-30">
@@ -284,25 +285,25 @@
 
 
     <!-- Footer Start -->
+    @foreach($socials as $social)
     <div class="container-fluid bg-blue text-secondary mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                <img src="img/logo1.jpg" class="img-fluid fade-edges" width="400" alt="logo" />
+                <img src="{{asset('img/logo1.jpg')}}" class="img-fluid fade-edges" width="400" alt="logo" />
                 <p class="mb-2 mt-2">
-                    <i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street,
-                    New York, USA
+                    <i class="fa fa-map-marker-alt text-primary mr-3"></i>{{$social->address}}
                 </p>
                 <p class="mb-2">
-                    <i class="fa fa-envelope text-primary mr-3"></i>info@example.com
+                    <i class="fa fa-envelope text-primary mr-3"></i>{{$social->email}}
                 </p>
                 <p class="mb-0">
-                    <i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890
+                    <i class="fa fa-phone text-primary mr-3"></i>{{$social->mobile}}
                 </p>
             </div>
             <div class="col-lg-8 col-md-12">
                 <div class="row">
                     <div class="col-md-4 mb-5">
-                        <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
+                        <h5 class="text-secondary text-uppercase mb-4">Product Categories</h5>
                         <div class="d-flex flex-column justify-content-start">
                             <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
                             <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
@@ -336,10 +337,10 @@
                         </form>
                         <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
                         <div class="d-flex">
-                            <a class="btn btn-primary2 btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-primary2 btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary2 btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-primary2 btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                            <a class="btn btn-primary2 btn-square mr-2" href="{{$social->twitter}}" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-primary2 btn-square mr-2" href="{{$social->fb}}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary2 btn-square mr-2" href="{{$social->linkedin}}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary2 btn-square" href="{{$social->insta}}" target="_blank"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
@@ -358,6 +359,7 @@
             </div>
         </div>
     </div>
+    @endforeach
     <!-- Footer End -->
 
     <!-- Back to Top -->

@@ -226,7 +226,7 @@
                             <a href="index.html" class="nav-item nav-link">Home</a>
                             <a
                                 href="product-categories.html"
-                                class="nav-item nav-link active">Products</a>
+                                class="nav-item nav-link">Products</a>
                             <a href="blogs.html" class="nav-item nav-link">Blogs</a>
                             <a href="contact.html" class="nav-item nav-link">Contact</a>
                         </div>
