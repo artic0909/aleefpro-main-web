@@ -21,4 +21,5 @@ class CartEnquiry extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+    
 }

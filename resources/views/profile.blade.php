@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Login</title>
+    <title>{{$customer->name}} | Manage Profile</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -18,6 +18,10 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Libraries Stylesheet -->
     <link href="{{ asset('lib/animate/animate.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet" />
@@ -29,6 +33,43 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/serach-responsive.css') }}" rel="stylesheet">
+
+    <style>
+        .custom-success-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            animation: fadeInOut 4s ease-in-out forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+
 </head>
 
 <body>
@@ -97,11 +138,17 @@
                                     </div>
                                 </div>
                             </form>
-
-                            <a href="" class="btn px-0">
+                            @auth('customers')
+                            <a href="/customer/cart" class="btn px-0">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-danger border border-warning rounded-circle">{{$cartCount}}</span>
+                            </a>
+                            @else
+                            <a href="/customer/cart" class="btn px-0">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-danger border border-warning rounded-circle">0</span>
                             </a>
+                            @endauth
                         </div>
 
 
@@ -201,19 +248,24 @@
                                 <i class="fas fa-user text-primary"></i>
                                 <span class="badge text-success" style="padding-bottom: 2px">✔</span>
                             </button>
+
+                            <a href="/customer/cart" class="btn px-0 ml-3">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle"
+                                    style="padding-bottom: 2px">{{$cartCount}}</span>
+                            </a>
                             @else
                             <a href="/customer/login" class="btn px-0">
                                 <i class="fas fa-user text-primary"></i>
                                 <span class="badge text-warning" style="padding-bottom: 2px">X</span>
                             </a>
-                            @endauth
-
 
                             <a href="/customer/cart" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle"
                                     style="padding-bottom: 2px">0</span>
                             </a>
+                            @endauth
                         </div>
                     </div>
                 </nav>
@@ -223,14 +275,14 @@
     <!-- Navbar End -->
 
 
-
     <!-- Breadcrumb Start -->
     <div class="container-fluid">
         <div class="row px-xl-5">
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
                     <a class="breadcrumb-item text-dark" href="/">Aleef Pro</a>
-                    <span class="breadcrumb-item active">Login Now</span>
+                    <a class="breadcrumb-item text-dark" href="#" style="text-transform: capitalize;">{{$customer->name}}</a>
+                    <span class="breadcrumb-item active">Manage Profile</span>
                 </nav>
             </div>
         </div>
@@ -240,67 +292,87 @@
 
     <!-- Contact Start -->
     <div class="container-fluid">
-        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Login
-                Now</span></h2>
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Profile Manage</span></h2>
         <div class="row px-xl-5">
             <div class="col-lg-7 mb-5">
                 <div class="contact-form bg-light p-30">
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-
-                    <form action="{{ route('customer.login.post') }}" method="POST" novalidate="novalidate">
+                    <div id="errorsShowHere"></div>
+                    <form action="{{route('customer.profile.update')}}" method="post" novalidate="novalidate">
                         @csrf
-
                         <div class="control-group">
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Your Email"
-                                required="required" data-validation-required-message="Please enter your email" />
+                            <label for="name" class="form-label">User Name</label>
+                            <input type="text" class="form-control" name="name" id="name" value="{{$customer->name}}" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="control-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="email" value="{{$customer->email}}" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="control-group">
+                            <label for="mobile" class="form-label">Mobile</label>
+                            <input type="text" class="form-control" name="mobile" id="mobile" value="{{$customer->mobile}}" />
                             <p class="help-block text-danger"></p>
                         </div>
 
-
-                        <div class="control-group">
-                            <input type="text" class="form-control" id="password" name="password" placeholder="Password"
-                                required="required" data-validation-required-message="Please enter your password" />
-                            <p class="help-block text-danger"></p>
-                        </div>
-
-                        <div>
-                            <button class="btn btn-primary2 py-2 px-4 font-weight-bold" type="submit" style="width: 100%;">
-                                LOGIN</button>
-                        </div>
-
-                        <div class="text-center mt-2" style="display: flex; justify-content: space-between;">
-                            <small>You don't have an account? <a href="/customer/register" class="font-weight-bold" style="text-decoration: underline !important;">Signup</a></small>
-                            <small>Forget Password? <a href="/customer/reset" class="font-weight-bold" style="text-decoration: underline !important;">Reset</a></small>
+                        <div style="width: 100% !important; text-align: center;">
+                            <button class="btn w-full btn-primary2 py-2 px-4" type="submit" style="width: 100%;">Update Profile</button>
                         </div>
                     </form>
                 </div>
-                @foreach($socials as $social)
-                <div class="bg-light p-30 mt-4">
-                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>{{$social->address}}</p>
-                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>{{$social->email}}</p>
-                    <p class="mb-2"><i class="fa fa-phone text-primary mr-3"></i>{{$social->mobile}}</p>
-                </div>
-                @endforeach
             </div>
             <div class="col-lg-5 mb-5">
-                <div class="bg-light p-30 mb-30">
-                    <iframe style="width: 100%; height: 250px;"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3001156.4288297426!2d-78.01371936852176!3d42.72876761954724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4ccc4bf0f123a5a9%3A0xddcfc6c1de189567!2sNew%20York%2C%20USA!5e0!3m2!1sen!2sbd!4v1603794290143!5m2!1sen!2sbd"
-                        frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-                </div>
+                <div class="contact-form bg-light p-30">
+                    <div id="errorsShowHere"></div>
 
+                    <form action="{{ route('customer.profile.update-password') }}" method="POST" novalidate>
+                        @csrf
+
+                        <div class="control-group">
+                            <label for="current_password" class="form-label">Old Password</label>
+                            <input type="password" class="form-control" name="current_password" id="current_password" placeholder="Enter old password" />
+                            <p class="help-block text-danger">@error('current_password') {{ $message }} @enderror</p>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" name="new_password" id="new_password" placeholder="Enter new password" />
+                            <p class="help-block text-danger">@error('new_password') {{ $message }} @enderror</p>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="new_password_confirmation" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" name="new_password_confirmation" id="new_password_confirmation" placeholder="Confirm new password" />
+                            <p class="help-block text-danger">@error('new_password_confirmation') {{ $message }} @enderror</p>
+                        </div>
+
+                        <div style="width: 100% !important; text-align: center;">
+                            <button class="btn w-full btn-primary2 py-2 px-4" type="submit" style="width: 100%;">Update Password</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
         </div>
     </div>
     <!-- Contact End -->
+
+
+    @if ($errors->any())
+    <div class="alert alert-danger" id="errorsShowHere">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
+    @if (session('success'))
+    <div id="successPopup" class="custom-success-popup">
+        {{ session('success') }}
+    </div>
+    @endif
 
 
     <!-- Footer Start -->
@@ -316,7 +388,7 @@
                     <i class="fa fa-envelope text-primary mr-3"></i>{{$social->email}}
                 </p>
                 <p class="mb-0">
-                    <i class="fa fa-phone text-primary mr-3"></i>{{$social->mobile}}
+                    <i class="fa fa-phone-alt text-primary mr-3"></i>{{$social->mobile}}
                 </p>
             </div>
             <div class="col-lg-8 col-md-12">
@@ -383,6 +455,20 @@
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const popup = document.getElementById('successPopup');
+            if (popup) {
+                setTimeout(() => {
+                    popup.remove();
+                }, 4000); // Matches CSS animation duration
+            }
+        });
+    </script>
+
+
 
 
     <!-- JavaScript Libraries -->

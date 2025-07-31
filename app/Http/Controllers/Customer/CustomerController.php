@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\ContactConfirmationMail;
 use App\Mail\CustomerCartEnquiryMail;
 use App\Mail\CustomerCartEnquiryRecieverMail;
+use App\Mail\CustomerPasswordResetOtpMail;
+use App\Mail\UpdatePasswordMail;
 use App\Mail\WelcomeCustomerMail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
@@ -25,6 +27,7 @@ use App\Models\SubCategory;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class CustomerController extends Controller
@@ -505,5 +508,139 @@ class CustomerController extends Controller
         Cart::where('customer_id', $customerId)->delete();
 
         return redirect()->back()->with('success', 'Enquiry submitted successfully!');
+    }
+
+    public function profileView()
+    {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        // Get the authenticated customer
+        $customer = Auth::guard('customers')->user();
+
+        return view('profile', compact(
+            'maincategories',
+            'subCategories',
+            'offers',
+            'partners',
+            'socials',
+            'abouts',
+            'customer',
+            'cartCount'
+        ));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $customer = Auth::guard('customers')->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:customers,email,' . $customer->id,
+            'mobile' => 'required|string|max:15',
+        ]);
+
+        try {
+            $customer->update($request->only('name', 'email', 'mobile'));
+
+            return redirect()->back()->with('success', 'Profile updated successfully.');
+        } catch (QueryException $e) {
+            return redirect()->back()->withErrors(['general' => 'Something went wrong. Please try again.']);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['general' => 'Unexpected error. Contact support if this continues.']);
+        }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $customer = Auth::guard('customers')->user();
+
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if (!Hash::check($request->current_password, $customer->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+
+        try {
+            $customer->update(['password' => Hash::make($request->new_password)]);
+
+            // Send email
+            $enquiryData = [
+                'name' => $customer->name,
+                'email' => $customer->email,
+            ];
+
+            Mail::to($customer->email)->send(new UpdatePasswordMail($enquiryData));
+
+            return redirect()->back()->with('success', 'Password updated successfully.');
+        } catch (QueryException $e) {
+            return redirect()->back()->withErrors(['general' => 'Something went wrong. Please try again.']);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['general' => 'Unexpected error. Contact support if this continues.']);
+        }
+    }
+
+    public function resetPasswordView()
+    {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+
+        return view('reset-password', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
+    }
+
+
+    public function sendOtp(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $customer = Customer::where('email', $request->email)->first();
+        if (!$customer) {
+            return redirect()->back()->with('error', 'Customer not exist.');
+        }
+
+        $otp = rand(100000, 999999);
+        $customer->otp = $otp;
+        $customer->save();
+
+        Mail::to($customer->email)->send(new CustomerPasswordResetOtpMail($customer->name, $otp));
+
+        return redirect()->back()->with('success', 'OTP sent successfully.');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp' => 'required',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $customer = Customer::where('email', $request->email)
+            ->where('otp', $request->otp)
+            ->first();
+
+        if (!$customer) {
+            return back()->withErrors(['otp' => 'Invalid OTP or email.']);
+        }
+
+        $customer->password = Hash::make($request->new_password);
+        $customer->otp = null; // clear OTP after use
+        $customer->save();
+
+        return redirect()->route('customer.login')->with('success', 'Password reset successful.');
     }
 }

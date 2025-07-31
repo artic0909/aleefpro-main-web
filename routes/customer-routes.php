@@ -11,6 +11,11 @@ Route::get('/customer/login', [CustomerController::class, 'loginView'])->name('c
 Route::get('/customer/register', [CustomerController::class, 'registerView'])->name('customer.register');
 Route::post('/customer/login', [CustomerController::class, 'login'])->name('customer.login.post');
 Route::post('/customer/register', [CustomerController::class, 'register'])->name('customer.register.post');
+Route::get('/customer/reset', [CustomerController::class, 'resetPasswordView'])->name('customer.reset-password');
+
+Route::post('/customer/send-otp', [CustomerController::class, 'sendOtp'])->name('customer.send-otp');
+Route::post('/customer/reset-password', [CustomerController::class, 'resetPassword'])->name('customer.reset-password.post');
+
 
 Route::get('/about', [CustomerController::class, 'aboutView'])->name('customer.about');
 
@@ -39,6 +44,10 @@ Route::middleware(['auth:customers'])->group(function () {
     Route::post('/customer/cart/remove', [CustomerController::class, 'removeFromCart'])->name('customer.cart.remove');
 
     Route::post('/customer/submit-cart-enquiry', [CustomerController::class, 'submitCartEnquiry'])->name('customer.cart.enquiry');
+
+    Route::get('/customer/profile', [CustomerController::class, 'profileView'])->name('customer.profile');
+    Route::post('/customer/profile/update', [CustomerController::class, 'updateProfile'])->name('customer.profile.update');
+    Route::post('/customer/profile/update-password', [CustomerController::class, 'updatePassword'])->name('customer.profile.update-password');
 
 
     Route::get('/customer/logout', [CustomerController::class, 'logout'])->name('customer.logout');

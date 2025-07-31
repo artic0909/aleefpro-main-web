@@ -284,7 +284,7 @@
                         </div>
 
                         <div class="text-center mt-2">
-                            <small>You have any account? <a href="/customer/customer/login" class="font-weight-bold" style="text-decoration: underline !important;">Login</a></small>
+                            <small>You have any account? <a href="/customer/login" class="font-weight-bold" style="text-decoration: underline !important;">Login</a></small>
                         </div>
                     </form>
                 </div>

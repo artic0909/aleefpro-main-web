@@ -304,10 +304,8 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>Product Names</th>
-                                    <th>Codes</th>
-                                    <th>Colors</th>
-                                    <th>Sizes</th>
-                                    <th>Quantity</th>
+                                    <th>Details</th>
+                                    <th>Qty</th>
                                     <th>Rate</th>
                                     <th>Amount</th>
                                     <th>Remove</th>
@@ -319,14 +317,17 @@
                                 @foreach($cartItems as $items)
                                 <tr>
                                     <td class="align-middle">{{$items->product->product_name}}</td>
-                                    <td class="align-middle">{{$items->product->product_code}}</td>
-                                    <td class="align-middle">{{$items->color}}</td>
-                                    <td class="align-middle">{{$items->size}}</td>
+                                    <td class="align-middle">
+                                        <p style="margin: 0;">{{$items->product->product_code}}</p>
+                                        <p style="margin: 0;">{{$items->color}}</p>
+                                        <p style="margin: 0;">{{$items->size}}</p>
+                                    </td>
                                     <td class="align-middle">{{$items->quantity}}</td>
                                     <td class="align-middle">₹ {{$items->product->selling_price}}.00</td>
                                     <td class="align-middle">₹ {{$items->product->selling_price * $items->quantity}}.00</td>
-                                    <td class="align-middle" style="display: flex; justify-content: center; align-items: center;">
-                                        <form action="{{ route('customer.cart.remove') }}" method="POST">
+                                    <td class="align-middle">
+
+                                        <form action="{{ route('customer.cart.remove') }}" method="POST" style="display: flex; align-items: center; justify-content: center;">
                                             @csrf
                                             <input type="hidden" name="cart_id" value="{{ $items->id }}">
                                             <button type="submit" class="btn btn-primary2">
@@ -340,8 +341,8 @@
                                 @else
                                 <tr>
                                     <td
-                                        colspan="8"
-                                        style="font-size: 1.2rem; font-weight: bold">
+                                        colspan="6"
+                                        style="font-size: 1rem; font-weight: bold">
                                         No Items Found
                                     </td>
                                 </tr>
@@ -350,26 +351,26 @@
 
                                 <tr>
                                     <td
-                                        colspan="4"
-                                        style="font-size: 1.2rem; font-weight: bold">
+                                        colspan="2"
+                                        style="font-weight: bold">
                                         Sub Total
                                     </td>
                                     <td
                                         id="totalQuantity"
                                         colspan="1"
-                                        style="font-size: 1.2rem; font-weight: bold">
+                                        style="font-weight: bold">
                                         Qty: {{ $totalQuantity }}
                                     </td>
                                     <td
                                         id="totalRate"
                                         colspan="1"
-                                        style="font-size: 1.2rem; font-weight: bold">
+                                        style="font-weight: bold">
                                         ₹ {{ $totalRate }}.00
                                     </td>
                                     <td
                                         id="totalAmount"
                                         colspan="2"
-                                        style="font-size: 1.2rem; font-weight: bold">
+                                        style="font-weight: bold">
                                         ₹ {{ $totalAmount }}.00
                                     </td>
                                 </tr>
@@ -459,57 +460,27 @@
     </div>
     <!-- Cart Items End -->
 
-    <!-- Offer Start -->
-    <div class="container-fluid pt-5 pb-3">
-        <div class="row px-xl-5">
-            <div class="col-md-6">
-                <div class="product-offer mb-30" style="height: 300px">
-                    <img class="img-fluid" src="img/offer-1.jpg" alt="" />
-                    <div class="offer-text">
-                        <h6 class="text-white text-uppercase">Save 20%</h6>
-                        <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="" class="btn btn-primary2">Shop Now</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="product-offer mb-30" style="height: 300px">
-                    <img class="img-fluid" src="img/offer-2.jpg" alt="" />
-                    <div class="offer-text">
-                        <h6 class="text-white text-uppercase">Save 20%</h6>
-                        <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="" class="btn btn-primary2">Shop Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Offer End -->
 
     <!-- Footer Start -->
+    @foreach($socials as $social)
     <div class="container-fluid bg-blue text-secondary mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                <img
-                    src="img/logo1.jpg"
-                    class="img-fluid fade-edges"
-                    width="400"
-                    alt="logo" />
+                <img src="{{asset('img/logo1.jpg')}}" class="img-fluid fade-edges" width="400" alt="logo" />
                 <p class="mb-2 mt-2">
-                    <i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street,
-                    New York, USA
+                    <i class="fa fa-map-marker-alt text-primary mr-3"></i>{{$social->address}}
                 </p>
                 <p class="mb-2">
-                    <i class="fa fa-envelope text-primary mr-3"></i>info@example.com
+                    <i class="fa fa-envelope text-primary mr-3"></i>{{$social->email}}
                 </p>
                 <p class="mb-0">
-                    <i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890
+                    <i class="fa fa-phone text-primary mr-3"></i>{{$social->mobile}}
                 </p>
             </div>
             <div class="col-lg-8 col-md-12">
                 <div class="row">
                     <div class="col-md-4 mb-5">
-                        <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
+                        <h5 class="text-secondary text-uppercase mb-4">Product Categories</h5>
                         <div class="d-flex flex-column justify-content-start">
                             <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
                             <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
@@ -535,10 +506,7 @@
                         <p>Send us your email &amp; get latest updates!</p>
                         <form action="">
                             <div class="input-group">
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    placeholder="Your Email Address" />
+                                <input type="text" class="form-control" placeholder="Your Email Address" />
                                 <div class="input-group-append">
                                     <button class="btn btn-primary2">SEND</button>
                                 </div>
@@ -546,18 +514,16 @@
                         </form>
                         <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
                         <div class="d-flex">
-                            <a class="btn btn-primary2 btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-primary2 btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary2 btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-primary2 btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                            <a class="btn btn-primary2 btn-square mr-2" href="{{$social->twitter}}" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-primary2 btn-square mr-2" href="{{$social->fb}}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary2 btn-square mr-2" href="{{$social->linkedin}}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary2 btn-square" href="{{$social->insta}}" target="_blank"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div
-            class="row border-top mx-xl-5 py-4"
-            style="border-color: rgba(256, 256, 256, 0.1) !important">
+        <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, 0.1) !important">
             <div class="col-md-6 px-xl-0">
                 <p class="mb-md-0 text-center text-md-left text-secondary">
                     &copy; <a class="text-primary" href="#">Domain</a>. All Rights
@@ -570,6 +536,7 @@
             </div>
         </div>
     </div>
+    @endforeach
     <!-- Footer End -->
 
 

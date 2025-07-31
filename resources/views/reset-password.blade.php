@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Login</title>
+    <title>Reset Password</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -29,6 +29,49 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/serach-responsive.css') }}" rel="stylesheet">
+    <style>
+        .custom-success-popup,
+        .custom-error-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            z-index: 9999;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeInOut 4s ease-in-out forwards;
+        }
+
+        .custom-success-popup {
+            background-color: #4CAF50;
+        }
+
+        .custom-error-popup {
+            background-color: #f44336;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -230,7 +273,7 @@
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
                     <a class="breadcrumb-item text-dark" href="/">Aleef Pro</a>
-                    <span class="breadcrumb-item active">Login Now</span>
+                    <span class="breadcrumb-item active">Reset Your Password</span>
                 </nav>
             </div>
         </div>
@@ -255,32 +298,52 @@
                     </div>
                     @endif
 
-                    <form action="{{ route('customer.login.post') }}" method="POST" novalidate="novalidate">
+                    <form action="{{route('customer.send-otp')}}" method="POST" novalidate="novalidate" id="emailForm">
                         @csrf
 
                         <div class="control-group">
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Your Email"
+                            <input type="email" class="form-control" id="otpEmail" name="email" placeholder="Your Email"
                                 required="required" data-validation-required-message="Please enter your email" />
                             <p class="help-block text-danger"></p>
                         </div>
 
+                        <div style="width: 100%; text-align: right;">
+                            <button class="btn btn-primary2 py-2 px-4 font-weight-bold" type="submit" style="text-align:right;">
+                                SEND OTP</button>
+                        </div>
 
-                        <div class="control-group">
-                            <input type="text" class="form-control" id="password" name="password" placeholder="Password"
-                                required="required" data-validation-required-message="Please enter your password" />
-                            <p class="help-block text-danger"></p>
+
+                    </form>
+
+                    <form action="{{route('customer.reset-password.post')}}" method="POST" style="margin-top: 15px;">
+                        @csrf
+
+                        <div class="control-group" style="margin-bottom: 10px;">
+                            <input type="text" name="otp" class="form-control" placeholder="Enter the OTP" required>
+                        </div>
+
+                        <div class="control-group" style="margin-bottom: 10px;">
+                            <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+                        </div>
+
+                        <div class="control-group" style="margin-bottom: 10px;">
+                            <input type="password" name="new_password" class="form-control" placeholder="Enter new password" required>
+                        </div>
+
+                        <div class="control-group" style="margin-bottom: 10px;">
+                            <input type="password" name="new_password_confirmation" class="form-control" placeholder="Confirm new password" required>
                         </div>
 
                         <div>
                             <button class="btn btn-primary2 py-2 px-4 font-weight-bold" type="submit" style="width: 100%;">
-                                LOGIN</button>
-                        </div>
-
-                        <div class="text-center mt-2" style="display: flex; justify-content: space-between;">
-                            <small>You don't have an account? <a href="/customer/register" class="font-weight-bold" style="text-decoration: underline !important;">Signup</a></small>
-                            <small>Forget Password? <a href="/customer/reset" class="font-weight-bold" style="text-decoration: underline !important;">Reset</a></small>
+                                Reset Password
+                            </button>
                         </div>
                     </form>
+
+
+
+
                 </div>
                 @foreach($socials as $social)
                 <div class="bg-light p-30 mt-4">
@@ -381,9 +444,38 @@
     @endforeach
     <!-- Footer End -->
 
+
+    @if (session('success'))
+    <div id="successPopup" class="custom-success-popup">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    @if (session('error'))
+    <div id="errorPopup" class="custom-error-popup">
+        {{ session('error') }}
+    </div>
+    @endif
+
+
+
+
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const successPopup = document.getElementById('successPopup');
+            const errorPopup = document.getElementById('errorPopup');
+
+            if (successPopup) setTimeout(() => successPopup.remove(), 4000);
+            if (errorPopup) setTimeout(() => errorPopup.remove(), 4000);
+        });
+    </script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
