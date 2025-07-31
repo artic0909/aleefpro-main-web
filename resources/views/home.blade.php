@@ -19,16 +19,16 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
 
   <!-- Libraries Stylesheet -->
-  <link href="lib/animate/animate.min.css" rel="stylesheet" />
-  <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
-  
+  <link href="{{ asset('lib/animate/animate.min.css') }}" rel="stylesheet" />
+  <link href="{{ asset('lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet" />
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Customized Bootstrap Stylesheet -->
-  <link href="css/style.css" rel="stylesheet" />
-  <link href="css/serach-responsive.css" rel="stylesheet">
+  <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
+  <link href="{{ asset('css/serach-responsive.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -53,8 +53,19 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right">
 
+              @auth('customers')
+              <a href="" class="dropdown-item" type="button">
+                <i class="fa-solid fa-gear"></i> Profile
+              </a>
+              <a href="{{ route('customer.logout') }}" class="dropdown-item" type="button">
+                <i class="fa-solid fa-power-off"></i> Logout
+              </a>
+              @else
               <a href="/customer/login" class="dropdown-item" type="button">Login</a>
               <a href="/customer/register" class="dropdown-item" type="button">Signup</a>
+              @endauth
+
+
 
             </div>
           </div>
@@ -185,12 +196,20 @@
             </div>
             <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
 
+              @auth('customers')
+              <button class="btn px-0">
+                <i class="fas fa-user text-primary"></i>
+                <span class="badge text-success" style="padding-bottom: 2px">✔</span>
+              </button>
+              @else
               <a href="/customer/login" class="btn px-0">
                 <i class="fas fa-user text-primary"></i>
                 <span class="badge text-warning" style="padding-bottom: 2px">X</span>
               </a>
+              @endauth
 
-              <a href="" class="btn px-0 ml-3">
+
+              <a href="/customer/cart" class="btn px-0 ml-3">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span class="badge text-secondary border border-secondary rounded-circle"
                   style="padding-bottom: 2px">0</span>
@@ -489,15 +508,13 @@
   <!-- JavaScript Libraries -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-  <script src="lib/easing/easing.min.js"></script>
-  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="{{ asset('lib/easing/easing.min.js') }}"></script>
+  <script src="{{ asset('lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
-  <!-- Contact Javascript File -->
-  <script src="mail/jqBootstrapValidation.min.js"></script>
-  <script src="mail/contact.js"></script>
+
 
   <!-- Template Javascript -->
-  <script src="js/main.js"></script>
+  <script src="{{ asset('js/main.js') }}"></script>
 </body>
 
 </html>

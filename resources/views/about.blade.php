@@ -17,9 +17,9 @@
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Libraries Stylesheet -->
     <link href="lib/animate/animate.min.css" rel="stylesheet">
@@ -195,10 +195,18 @@
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
 
+                            @auth('customers')
+                            <button class="btn px-0">
+                                <i class="fas fa-user text-primary"></i>
+                                <span class="badge text-success" style="padding-bottom: 2px">✔</span>
+                            </button>
+                            @else
                             <a href="/customer/login" class="btn px-0">
                                 <i class="fas fa-user text-primary"></i>
                                 <span class="badge text-warning" style="padding-bottom: 2px">X</span>
                             </a>
+                            @endauth
+
 
                             <a href="/customer/cart" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>

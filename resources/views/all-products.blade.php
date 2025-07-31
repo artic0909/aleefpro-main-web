@@ -52,8 +52,19 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
 
+                        @auth('customers')
+                        <a href="" class="dropdown-item" type="button">
+                            <i class="fa-solid fa-gear"></i> Profile
+                        </a>
+                        <a href="{{ route('customer.logout') }}" class="dropdown-item" type="button">
+                            <i class="fa-solid fa-power-off"></i> Logout
+                        </a>
+                        @else
                         <a href="/customer/login" class="dropdown-item" type="button">Login</a>
                         <a href="/customer/register" class="dropdown-item" type="button">Signup</a>
+                        @endauth
+
+
 
                     </div>
                 </div>
@@ -184,12 +195,20 @@
                     </div>
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
 
+                        @auth('customers')
+                        <button class="btn px-0">
+                            <i class="fas fa-user text-primary"></i>
+                            <span class="badge text-success" style="padding-bottom: 2px">✔</span>
+                        </button>
+                        @else
                         <a href="/customer/login" class="btn px-0">
                             <i class="fas fa-user text-primary"></i>
                             <span class="badge text-warning" style="padding-bottom: 2px">X</span>
                         </a>
+                        @endauth
 
-                        <a href="" class="btn px-0 ml-3">
+
+                        <a href="/customer/cart" class="btn px-0 ml-3">
                             <i class="fas fa-shopping-cart text-primary"></i>
                             <span class="badge text-secondary border border-secondary rounded-circle"
                                 style="padding-bottom: 2px">0</span>
@@ -208,7 +227,7 @@
         <div class="col-12">
             <img src="img/breadc.webp" class="img-fluid" width="100%" alt="" />
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="#">Home</a>
+                <a class="breadcrumb-item text-dark" href="/">Home</a>
                 <a class="breadcrumb-item text-dark" href="#">{{ $mainCategory->main_category_name }}</a>
                 <span class="breadcrumb-item active">{{ $subCategory->sub_category_name }}</span>
             </nav>
