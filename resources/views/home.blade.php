@@ -441,7 +441,7 @@
   <div class="container-fluid bg-blue text-secondary mt-5 pt-5">
     <div class="row px-xl-5 pt-5">
       <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-        <img src="img/logo1.jpg" class="img-fluid fade-edges" width="400" alt="logo" />
+        <img src="{{asset('img/logo1.jpg')}}" class="img-fluid fade-edges" width="400" alt="logo" />
         <p class="mb-2 mt-2">
           <i class="fa fa-map-marker-alt text-primary mr-3"></i>{{$social->address}}
         </p>

@@ -12,6 +12,7 @@ class Product extends Model
     protected $fillable = [
         'sub_category_id',
         'product_name',
+        'product_code',
         'images',
         'sizes',
         'colors',
@@ -21,6 +22,8 @@ class Product extends Model
         'selling_price',
         'size_chart_image',
         'slug',
+        'front_customize',
+        'back_customize',
     ];
 
     protected $casts = [

@@ -49,6 +49,14 @@ Route::middleware(['auth:customers'])->group(function () {
     Route::post('/customer/profile/update', [CustomerController::class, 'updateProfile'])->name('customer.profile.update');
     Route::post('/customer/profile/update-password', [CustomerController::class, 'updatePassword'])->name('customer.profile.update-password');
 
+    Route::get('/customer/product-enquiry/{mainSlug}/{subSlug}/{productSlug}', [CustomerController::class, 'productEnquiryView'])->name('customer.product.enquiry');
+    Route::post('/customer/product-enquiry/send', [CustomerController::class, 'productEnquirySend'])->name('customer.product.enquiry.send');
+
+    Route::get('/customer/product-customize/{mainSlug}/{subSlug}/{productSlug}', [CustomerController::class, 'productCustomizationEnquiryView'])->name('customer.product.customize');
+    Route::post('/customer/product-customize/send', [CustomerController::class, 'productCustomizationEnquirySend'])->name('customer.product.customize.send');
+
+
+
 
     Route::get('/customer/logout', [CustomerController::class, 'logout'])->name('customer.logout');
 });

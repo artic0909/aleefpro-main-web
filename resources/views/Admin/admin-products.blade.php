@@ -233,9 +233,12 @@
                                             <tr>
                                                 <th>SL</th>
                                                 <th>Images</th>
+                                                <th>Front Image</th>
+                                                <th>Back Image</th>
                                                 <th>Main Category Name</th>
                                                 <th>Sub Category Name</th>
                                                 <th>Product Name</th>
+                                                <th>Product Code</th>
                                                 <th>Sizes</th>
                                                 <th>Colors</th>
                                                 <th>Actual Price</th>
@@ -263,9 +266,13 @@
                                                     @endif
                                                 </td>
 
+                                                <td><img src="{{ asset('storage/' . $product->front_customize) }}" class="img-fluid" alt=""></td>
+                                                <td><img src="{{ asset('storage/' . $product->back_customize) }}" class="img-fluid" alt=""></td>
+
                                                 <td>{{$product->subCategory->mainCategory->main_category_name}}</td>
                                                 <td>{{$product->subCategory->sub_category_name}}</td>
                                                 <td>{{$product->product_name}}</td>
+                                                <td>{{$product->product_code}}</td>
                                                 <td>{{$product->sizes}}</td>
                                                 <td>{{$product->colors}}</td>
                                                 <td>{{$product->actual_price}}</td>
@@ -309,6 +316,16 @@
                                     <input type="file" name="images[]" id="images" class="form-control" multiple required>
                                 </div>
 
+                                <div class="">
+                                    <label for="front_customize" class="form-label">Front Image<span class="text-danger">*</span></label>
+                                    <input type="file" name="front_customize" id="front_customize" class="form-control" required>
+                                </div>
+
+                                <div class="">
+                                    <label for="back_customize" class="form-label">Back Image<span class="text-danger">*</span></label>
+                                    <input type="file" name="back_customize" id="back_customize" class="form-control" required>
+                                </div>
+
                                 <div class="mt-3">
                                     <label for="main_category_name" class="form-label">Main Category<span class="text-danger">*</span></label>
                                     <select name="main_category_id" id="main_category_id" class="form-select">
@@ -336,6 +353,11 @@
                                 <div class="mt-3">
                                     <label for="product_name" class="form-label">Product Name<span class="text-danger">*</span></label>
                                     <input type="text" name="product_name" id="product_name" class="form-control" required>
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="product_code" class="form-label">Product Code<span class="text-danger">*</span></label>
+                                    <input type="text" name="product_code" id="product_code" class="form-control" required>
                                 </div>
 
                                 <div class="mt-3">
@@ -419,6 +441,24 @@
                                 </div>
 
                                 <div class="mt-3">
+                                    <img src="{{ asset('storage/' . $product->front_customize) }}" alt="" class="img-fluid" width="100" height="100">
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="front_customize" class="form-label">Front Image<span class="text-danger">*</span></label>
+                                    <input type="file" name="front_customize" id="front_customize" class="form-control">
+                                </div>
+
+                                <div class="mt-3">
+                                    <img src="{{ asset('storage/' . $product->back_customize) }}" alt="" class="img-fluid" width="100" height="100">
+                                </div>
+
+                                <div class="mt-3">
+                                    <label for="back_customize" class="form-label">Back Image<span class="text-danger">*</span></label>
+                                    <input type="file" name="back_customize" id="back_customize" class="form-control">
+                                </div>
+
+                                <div class="mt-3">
                                     <label for="main_category_name" class="form-label">Main Category<span class="text-danger">*</span></label>
                                     <select name="main_category_id" class="form-select main-category-select" data-product-id="{{ $product->id }}">
                                         <option value="">Select Main Category</option>
@@ -451,6 +491,12 @@
                                     <label for="product_name" class="form-label">Product Name<span class="text-danger">*</span></label>
                                     <input type="text" name="product_name" id="product_name" class="form-control" value="{{ $product->product_name }}">
                                 </div>
+
+                                <div class="mt-3">
+                                    <label for="product_code" class="form-label">Product Code<span class="text-danger">*</span></label>
+                                    <input type="text" name="product_code" id="product_code" class="form-control" value="{{ $product->product_code }}">
+                                </div>
+
 
                                 <div class="mt-3">
                                     <label for="sizes" class="form-label">Sizes<span class="text-danger">*</span></label>

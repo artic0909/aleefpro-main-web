@@ -7,6 +7,10 @@ use App\Mail\ContactConfirmationMail;
 use App\Mail\CustomerCartEnquiryMail;
 use App\Mail\CustomerCartEnquiryRecieverMail;
 use App\Mail\CustomerPasswordResetOtpMail;
+use App\Mail\CustomizeEnquiryRecieverMail;
+use App\Mail\CustomizeEnquirySenderMail;
+use App\Mail\ProductEnquiryMail;
+use App\Mail\ProductEnquiryMailSender;
 use App\Mail\UpdatePasswordMail;
 use App\Mail\WelcomeCustomerMail;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +24,9 @@ use App\Models\Blog;
 use App\Models\Cart;
 use App\Models\CartEnquiry;
 use App\Models\Contact;
+use App\Models\CustomEnquiry;
 use App\Models\Faq;
+use App\Models\ProductEnquiry;
 use App\Models\ScrollBanners;
 use App\Models\Social;
 use App\Models\SubCategory;
@@ -29,6 +35,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class CustomerController extends Controller
 {
@@ -445,8 +452,6 @@ class CustomerController extends Controller
         return redirect()->back()->with('success', 'Product removed from cart!');
     }
 
-
-
     public function submitCartEnquiry(Request $request)
     {
         $customerId = Auth::guard('customers')->id();
@@ -500,7 +505,7 @@ class CustomerController extends Controller
         ];
 
         // Send email
-        Mail::to('saklinmustakofficial@gmail.com')->send(new CustomerCartEnquiryMail($enquiryData));
+        Mail::to('saklindeveloper@gmail.com')->send(new CustomerCartEnquiryMail($enquiryData));
 
         Mail::to($customerEmail)->send(new CustomerCartEnquiryRecieverMail($enquiryData));
 
@@ -602,7 +607,6 @@ class CustomerController extends Controller
         return view('reset-password', compact('maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts'));
     }
 
-
     public function sendOtp(Request $request)
     {
         $request->validate(['email' => 'required|email']);
@@ -642,5 +646,232 @@ class CustomerController extends Controller
         $customer->save();
 
         return redirect()->route('customer.login')->with('success', 'Password reset successful.');
+    }
+
+    public function productEnquiryView($mainSlug, $subSlug, $productSlug)
+    {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+        $customer = Auth::guard('customers')->user();
+
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        $product = Product::where('slug', $productSlug)
+            ->whereHas('subCategory', function ($q) use ($subSlug, $mainSlug) {
+                $q->where('slug', $subSlug)
+                    ->whereHas('mainCategory', function ($q2) use ($mainSlug) {
+                        $q2->where('slug', $mainSlug);
+                    });
+            })
+            ->with('subCategory.mainCategory')
+            ->firstOrFail();
+
+        return view('product-enquiry', compact(
+            'maincategories',
+            'subCategories',
+            'offers',
+            'partners',
+            'socials',
+            'abouts',
+            'cartCount',
+            'product',
+            'customer'
+        ));
+    }
+
+    public function productEnquirySend(Request $request)
+    {
+        $validated = $request->validate([
+            'product_name'     => 'required|string|max:255',
+            'product_code'     => 'required|string|max:255',
+            'price'            => 'required|numeric',
+            'main_sub_category'    => 'required|string|max:255',
+            'colors'           => 'nullable|string',
+            'sizes'            => 'nullable|string',
+            'units'            => 'required|numeric',
+            'customer_name'    => 'required|string|max:255',
+            'customer_email'   => 'required|email',
+            'customer_mobile'  => 'required|string|max:15',
+            'customer_address' => 'required|string',
+            'detail_enquiry'   => 'nullable|string',
+        ]);
+
+        $validated['enquiry_date'] = now();
+        $enquiry = ProductEnquiry::create($validated);
+
+        // Prepare email data
+        $mailData = [
+            'product_name'     => $enquiry->product_name,
+            'product_code'     => $enquiry->product_code,
+            'main_sub_category' => $enquiry->main_sub_category,
+            'product_color'    => $enquiry->colors,
+            'enquiry_size'     => $enquiry->sizes,
+            'product_rate'     => $enquiry->price,
+            'product_quantity' => $enquiry->units,
+            'total_amount'     => $enquiry->price * $enquiry->units,
+            'customer_name'    => $enquiry->customer_name,
+            'customer_email'   => $enquiry->customer_email,
+            'customer_mobile'  => $enquiry->customer_mobile,
+            'customer_address' => $enquiry->customer_address,
+            'detail_enquiry'   => $enquiry->detail_enquiry,
+        ];
+
+        // Send email to customer
+        Mail::to($enquiry->customer_email)->send(new ProductEnquiryMail($mailData));
+
+        // Send email to admin
+        Mail::to('saklindeveloper@gmail.com')->send(new ProductEnquiryMailSender($mailData));
+
+        return redirect()->back()->with('success', 'Enquiry submitted and email sent successfully.');
+    }
+
+    public function productCustomizationEnquiryView($mainSlug, $subSlug, $productSlug)
+    {
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+        $customer = Auth::guard('customers')->user();
+
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        $product = Product::where('slug', $productSlug)
+            ->whereHas('subCategory', function ($q) use ($subSlug, $mainSlug) {
+                $q->where('slug', $subSlug)
+                    ->whereHas('mainCategory', function ($q2) use ($mainSlug) {
+                        $q2->where('slug', $mainSlug);
+                    });
+            })
+            ->with('subCategory.mainCategory')
+            ->firstOrFail();
+
+        return view('product-customization-enquiry', compact(
+            'maincategories',
+            'subCategories',
+            'offers',
+            'partners',
+            'socials',
+            'abouts',
+            'cartCount',
+            'customer',
+            'product'
+        ));
+    }
+
+    public function productCustomizationEnquirySend(Request $request)
+    {
+        $validated = $request->validate([
+            'company_logo'             => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'product_customize_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'logo_placement'           => 'required|string|max:255',
+            'product_name'             => 'required|string|max:255',
+            'product_code'             => 'required|string|max:255',
+            'price'                    => 'required|numeric',
+            'main_sub_category'        => 'required|string|max:255',
+            'colors'                   => 'nullable|string',
+            'sizes'                    => 'nullable|string',
+            'units'                    => 'required|numeric',
+            'customer_name'            => 'required|string|max:255',
+            'customer_email'           => 'required|email',
+            'customer_mobile'          => 'required|string|max:15',
+            'customer_address'         => 'required|string',
+            'detail_enquiry'           => 'nullable|string',
+        ]);
+
+        // Upload files
+        $attachments = [];
+
+        if ($request->hasFile('company_logo')) {
+            $file = $request->file('company_logo');
+            $filename = time() . '_company_' . $file->getClientOriginalName();
+            $path = $file->storeAs('enquiry/company_logos', $filename, 'public');
+            $validated['company_logo'] = $path;
+
+            $attachments[] = [
+                'file' => storage_path('app/public/' . $path),
+                'options' => [
+                    'as' => basename($path),
+                    'mime' => $file->getMimeType() ?? 'image/webp'
+                ]
+            ];
+        }
+
+        if ($request->hasFile('product_customize_image')) {
+            $file = $request->file('product_customize_image');
+            $filename = time() . '_customize_' . $file->getClientOriginalName();
+            $path = $file->storeAs('enquiry/company_logos', $filename, 'public');
+            $validated['product_customize_image'] = $path;
+
+            $attachments[] = [
+                'file' => storage_path('app/public/' . $path),
+                'options' => [
+                    'as' => basename($path),
+                    'mime' => $file->getMimeType() ?? 'image/webp'
+                ]
+            ];
+        }
+
+
+        $validated['enquiry_date'] = now();
+
+        $enquiry = CustomEnquiry::create($validated);
+
+        // Prepare data for mail view
+        $mailData = [
+            'product_name'     => $validated['product_name'],
+            'product_code'     => $validated['product_code'],
+            'main_sub_category' => $validated['main_sub_category'],
+            'product_color'    => $validated['colors'] ?? '-',
+            'enquiry_size'     => $validated['sizes'] ?? '-',
+            'product_rate'     => $validated['price'],
+            'product_quantity' => $validated['units'],
+            'total_amount'     => $validated['price'] * $validated['units'],
+            'customer_name'    => $validated['customer_name'],
+            'customer_email'   => $validated['customer_email'],
+            'customer_mobile'  => $validated['customer_mobile'],
+            'customer_address' => $validated['customer_address'],
+            'detail_enquiry'   => $validated['detail_enquiry'] ?? 'N/A',
+
+            'company_logo' => $validated['company_logo'] ?? null,
+            'product_customize_image' => $validated['product_customize_image'] ?? null,
+            'logo_placement' => $validated['logo_placement']
+        ];
+
+        if ($validated['company_logo']) {
+            $attachments[] = [
+                'file' => storage_path('app/public/' . $validated['company_logo']),
+                'options' => [
+                    'as' => basename($validated['company_logo']),
+                    'mime' => 'image/webp'
+                ]
+            ];
+        }
+
+        if ($validated['product_customize_image']) {
+            $attachments[] = [
+                'file' => storage_path('app/public/' . $validated['product_customize_image']),
+                'options' => [
+                    'as' => basename($validated['product_customize_image']),
+                    'mime' => 'image/webp'
+                ]
+            ];
+        }
+
+
+        // Send mail with attachments
+        Mail::to($validated['customer_email'])->send(new CustomizeEnquiryRecieverMail($mailData, $attachments));
+
+        // Send mail to admin
+        Mail::to('saklindeveloper@gmail.com')->send(new CustomizeEnquirySenderMail($mailData, $attachments));
+
+        return redirect()->back()->with('success', 'Customization enquiry submitted and email sent successfully.');
     }
 }

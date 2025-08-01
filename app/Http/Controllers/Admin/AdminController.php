@@ -386,6 +386,7 @@ class AdminController extends Controller
         $request->validate([
             'sub_category_id' => 'required|exists:sub_categories,id',
             'product_name' => 'required|string|max:255',
+            'product_code' => 'required|string|max:255',
             'images.*' => 'nullable|image',
             'sizes' => 'nullable|string',
             'colors' => 'nullable|string',
@@ -394,6 +395,8 @@ class AdminController extends Controller
             'description' => 'nullable|string',
             'information' => 'nullable|string',
             'size_chart_image' => 'nullable|image',
+            'front_customize' => 'nullable|image',
+            'back_customize' => 'nullable|image',
         ]);
 
         $imagePaths = [];
@@ -412,9 +415,26 @@ class AdminController extends Controller
             $sizeChartPath = $file->storeAs('products/size_charts', $filename, 'public');
         }
 
+        $frontCustomizePath = null;
+        if ($request->hasFile('front_customize')) {
+            $file = $request->file('front_customize');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $frontCustomizePath = $file->storeAs('products/front_customize', $filename, 'public');
+        }
+
+        $backCustomizePath = null;
+        if ($request->hasFile('back_customize')) {
+            $file = $request->file('back_customize');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $backCustomizePath = $file->storeAs('products/back_customize', $filename, 'public');
+        }
+
+
+
         Product::create([
             'sub_category_id' => $request->sub_category_id,
             'product_name' => $request->product_name,
+            'product_code' => $request->product_code,
             'images' => json_encode($imagePaths),
             'sizes' => $request->sizes,
             'colors' => $request->colors,
@@ -423,7 +443,9 @@ class AdminController extends Controller
             'description' => $request->description,
             'information' => $request->information,
             'size_chart_image' => $sizeChartPath,
-            'slug' => Str::slug($request->product_name)
+            'slug' => Str::slug($request->product_name),
+            'front_customize' => $frontCustomizePath,
+            'back_customize' => $backCustomizePath,
         ]);
 
         return back()->with('success', 'Product saved successfully.');
@@ -436,6 +458,7 @@ class AdminController extends Controller
         $request->validate([
             'sub_category_id' => 'required|exists:sub_categories,id',
             'product_name' => 'required|string|max:255',
+            'product_code' => 'required|string|max:255',
             'images.*' => 'nullable|image',
             'sizes' => 'nullable|string',
             'colors' => 'nullable|string',
@@ -444,6 +467,8 @@ class AdminController extends Controller
             'description' => 'nullable|string',
             'information' => 'nullable|string',
             'size_chart_image' => 'nullable|image',
+            'front_customize' => 'nullable|image',
+            'back_customize' => 'nullable|image',
         ]);
 
 
@@ -474,9 +499,30 @@ class AdminController extends Controller
             $sizeChartPath = $file->storeAs('products/size_charts', $filename, 'public');
         }
 
+        $frontCustomizePath = $product->front_customize;
+        if ($request->hasFile('front_customize')) {
+            if ($frontCustomizePath) {
+                Storage::disk('public')->delete($frontCustomizePath);
+            }
+            $file = $request->file('front_customize');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $frontCustomizePath = $file->storeAs('products/front_customize', $filename, 'public');
+        }
+
+        $backCustomizePath = $product->back_customize;
+        if ($request->hasFile('back_customize')) {
+            if ($backCustomizePath) {
+                Storage::disk('public')->delete($backCustomizePath);
+            }
+            $file = $request->file('back_customize');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $backCustomizePath = $file->storeAs('products/back_customize', $filename, 'public');
+        }
+
         $product->update([
             'sub_category_id' => $request->sub_category_id,
             'product_name' => $request->product_name,
+            'product_code' => $request->product_code,
             'images' => json_encode($imagePaths),
             'sizes' => $request->sizes,
             'colors' => $request->colors,
@@ -486,6 +532,8 @@ class AdminController extends Controller
             'information' => $request->information,
             'size_chart_image' => $sizeChartPath,
             'slug' => Str::slug($request->product_name),
+            'front_customize' => $frontCustomizePath,
+            'back_customize' => $backCustomizePath,
         ]);
 
         return back()->with('success', 'Product updated successfully.');

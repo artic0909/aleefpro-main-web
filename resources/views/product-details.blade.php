@@ -396,12 +396,20 @@
             </button>
 
             &nbsp;&nbsp;&nbsp;
-            <a href="product-enquiry.html" class="btn btn-primary2 px-3">
+            <a href="{{ route('customer.product.enquiry', [
+       'mainSlug' => $product->subCategory->mainCategory->slug,
+       'subSlug' => $product->subCategory->slug,
+       'productSlug' => $product->slug
+   ]) }}" class="btn btn-primary2 px-3">
               <i class="fa fa-info-circle mr-1"></i> Enquiry
             </a>
 
             &nbsp;&nbsp;&nbsp;
-            <a href="product-customize.html" class="btn btn-primary2 px-3">
+            <a href="{{ route('customer.product.customize', [
+       'mainSlug' => $product->subCategory->mainCategory->slug,
+       'subSlug' => $product->subCategory->slug,
+       'productSlug' => $product->slug
+   ]) }}" class="btn btn-primary2 px-3">
               <i class="fa fa-pen-to-square mr-1"></i> Customize
             </a>
           </div>
