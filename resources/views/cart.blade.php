@@ -102,7 +102,7 @@
                         <div class="dropdown-menu dropdown-menu-right">
 
                             @auth('customers')
-                            <a href="" class="dropdown-item" type="button">
+                            <a href="/customer/profile" class="dropdown-item" type="button">
                                 <i class="fa-solid fa-gear"></i> Profile
                             </a>
                             <a href="{{ route('customer.logout') }}" class="dropdown-item" type="button">
