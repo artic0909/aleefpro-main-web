@@ -188,24 +188,53 @@ class CustomerController extends Controller
         return view('home', compact('scrollingBanners', 'offers', 'maincategories', 'subCategories', 'products', 'partners', 'socials', 'cartCount'));
     }
 
-    public function allProductsView($mainSlug, $subSlug)
+    public function allProductsView(Request $request, $mainSlug, $subSlug)
     {
-
-        $mainCategory = MainCategory::where('slug', $mainSlug)->first();
-        if (!$mainCategory) {
-            abort(404, "Main category not found");
-        }
-
+        $mainCategory = MainCategory::where('slug', $mainSlug)->firstOrFail();
         $subCategory = SubCategory::where('slug', $subSlug)
             ->where('main_category_id', $mainCategory->id)
-            ->first();
+            ->firstOrFail();
 
-        if (!$subCategory) {
-            abort(404, "Sub category not found");
+        $query = Product::where('sub_category_id', $subCategory->id);
+
+        // Apply color filter
+        if ($request->has('colors')) {
+            $colors = array_map('strtolower', $request->input('colors', []));
+            $query->where(function ($q) use ($colors) {
+                foreach ($colors as $color) {
+                    $q->orWhereRaw("LOWER(colors) LIKE ?", ["%$color%"]);
+                }
+            });
         }
 
-        $products = Product::where('sub_category_id', $subCategory->id)->get();
+        // Apply size filter
+        if ($request->has('sizes')) {
+            $sizes = array_map('strtolower', $request->input('sizes', []));
+            $query->where(function ($q) use ($sizes) {
+                foreach ($sizes as $size) {
+                    $q->orWhereRaw("LOWER(sizes) LIKE ?", ["%$size%"]);
+                }
+            });
+        }
 
+        $products = $query->get();
+
+        // Get unique colors and sizes from all products under this subcategory
+        $allProducts = Product::where('sub_category_id', $subCategory->id)->get();
+
+        $uniqueColors = collect();
+        $uniqueSizes = collect();
+
+        foreach ($allProducts as $product) {
+            $colors = explode(',', strtolower($product->colors));
+            $sizes = explode(',', strtolower($product->sizes));
+
+            $uniqueColors = $uniqueColors->merge(array_map('trim', $colors));
+            $uniqueSizes = $uniqueSizes->merge(array_map('trim', $sizes));
+        }
+
+        $uniqueColors = $uniqueColors->unique()->sort()->values();
+        $uniqueSizes = $uniqueSizes->unique()->sort()->values();
 
         $maincategories = MainCategory::with('subCategory')->get();
         $subCategories = SubCategory::with('products', 'mainCategory')->get();
@@ -215,9 +244,21 @@ class CustomerController extends Controller
         $customerId = Auth::guard('customers')->id();
         $cartCount = Cart::where('customer_id', $customerId)->count();
 
-
-        return view('all-products', compact('mainCategory', 'subCategory', 'products', 'offers', 'partners', 'socials', 'maincategories', 'subCategories', 'cartCount'));
+        return view('all-products', compact(
+            'mainCategory',
+            'subCategory',
+            'products',
+            'offers',
+            'partners',
+            'socials',
+            'maincategories',
+            'subCategories',
+            'cartCount',
+            'uniqueColors',
+            'uniqueSizes'
+        ));
     }
+
 
     public function productDetailsView($mainSlug, $subSlug, $productSlug)
     {
@@ -873,5 +914,36 @@ class CustomerController extends Controller
         Mail::to('saklindeveloper@gmail.com')->send(new CustomizeEnquirySenderMail($mailData, $attachments));
 
         return redirect()->back()->with('success', 'Customization enquiry submitted and email sent successfully.');
+    }
+    public function searchProducts(Request $request)
+    {
+
+        $maincategories = MainCategory::with('subCategory')->get();
+        $subCategories = SubCategory::with('products', 'mainCategory')->get();
+        $offers = Offer::all();
+        $partners = Partner::all();
+        $socials = Social::all();
+        $abouts = About::all();
+        $customer = Auth::guard('customers')->user();
+
+        $customerId = Auth::guard('customers')->id();
+        $cartCount = Cart::where('customer_id', $customerId)->count();
+
+        $search = strtolower(trim($request->input('query')));
+
+        if (empty($search)) {
+            return redirect()->back()->with('error', 'Please enter a search term.');
+        }
+
+        $products = Product::whereRaw('LOWER(product_name) LIKE ?', ["%$search%"])
+            ->orWhereHas('subCategory', function ($q) use ($search) {
+                $q->whereRaw('LOWER(sub_category_name) LIKE ?', ["%$search%"])
+                    ->orWhereHas('mainCategory', function ($q2) use ($search) {
+                        $q2->whereRaw('LOWER(main_category_name) LIKE ?', ["%$search%"]);
+                    });
+            })
+            ->get();
+
+        return view('search-products', compact('products', 'search', 'maincategories', 'subCategories', 'offers', 'partners', 'socials', 'abouts', 'cartCount', 'customer'));
     }
 }

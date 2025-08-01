@@ -132,9 +132,9 @@
 
                     <div class="btn-group initial-hide">
                         <div style="display: flex; gap: 5px;">
-                            <form action="">
+                            <form action="{{ route('search.products') }}" method="GET">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search for products" />
+                                    <input type="text" name="query" class="form-control" placeholder="Search for products" />
                                     <div class="input-group-append">
                                         <span class="input-group-text bg-transparent text-primary">
                                             <i class="fa fa-search"></i>
@@ -174,9 +174,9 @@
                 </a>
             </div>
             <div class="col-lg-4 col-6 text-left">
-                <form action="">
+                <form action="{{ route('search.products') }}" method="GET">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products" />
+                        <input type="text" name="query" class="form-control" placeholder="Search for products" />
                         <div class="input-group-append">
                             <span class="input-group-text bg-transparent text-primary">
                                 <i class="fa fa-search"></i>

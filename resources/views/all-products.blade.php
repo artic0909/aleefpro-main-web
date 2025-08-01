@@ -86,9 +86,9 @@
 
                 <div class="btn-group initial-hide">
                     <div style="display: flex; gap: 5px;">
-                        <form action="">
+                        <form action="{{ route('search.products') }}" method="GET">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search for products" />
+                                <input type="text" name="query" class="form-control" placeholder="Search for products" />
                                 <div class="input-group-append">
                                     <span class="input-group-text bg-transparent text-primary">
                                         <i class="fa fa-search"></i>
@@ -129,9 +129,9 @@
             </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
-            <form action="">
+            <form action="{{ route('search.products') }}" method="GET">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for products" />
+                    <input type="text" name="query" class="form-control" placeholder="Search for products" />
                     <div class="input-group-append">
                         <span class="input-group-text bg-transparent text-primary">
                             <i class="fa fa-search"></i>
@@ -256,83 +256,43 @@
         <div class="col-lg-3 col-md-4">
             <!-- Color Start -->
             <h5 class="section-title position-relative text-uppercase mb-3">
-                <span class="bg-secondary pr-3">Filter by color</span>
+                <span class="bg-secondary pr-3">Filter The Products</span>
             </h5>
             <div class="bg-light p-4 mb-30">
-                <form>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" checked id="color-all" />
-                        <label class="custom-control-label" for="price-all">All Color</label>
-                        <span class="badge border font-weight-normal">1000</span>
+                <form method="GET" id="filterForm">
+                    <div class="bg-light p-4 mb-30">
+                        <h5 class="section-title text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by color</span></h5>
+                        @foreach($uniqueColors as $color)
+                        @php
+                        $color = ucfirst($color);
+                        $checked = in_array(strtolower($color), request()->input('colors', [])) ? 'checked' : '';
+                        @endphp
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-2">
+                            <input type="checkbox" class="custom-control-input" id="color-{{ $loop->index }}" name="colors[]" value="{{ strtolower($color) }}" {{ $checked }} onchange="document.getElementById('filterForm').submit();">
+                            <label class="custom-control-label" for="color-{{ $loop->index }}">{{ $color }}</label>
+                        </div>
+                        @endforeach
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-1" />
-                        <label class="custom-control-label" for="color-1">Black</label>
-                        <span class="badge border font-weight-normal">150</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-2" />
-                        <label class="custom-control-label" for="color-2">White</label>
-                        <span class="badge border font-weight-normal">295</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-3" />
-                        <label class="custom-control-label" for="color-3">Red</label>
-                        <span class="badge border font-weight-normal">246</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-4" />
-                        <label class="custom-control-label" for="color-4">Blue</label>
-                        <span class="badge border font-weight-normal">145</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" id="color-5" />
-                        <label class="custom-control-label" for="color-5">Green</label>
-                        <span class="badge border font-weight-normal">168</span>
+
+                    <div class="bg-light p-4 mb-30">
+                        <h5 class="section-title text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by size</span></h5>
+                        @foreach($uniqueSizes as $size)
+                        @php
+                        $size = strtoupper($size);
+                        $checked = in_array(strtolower($size), request()->input('sizes', [])) ? 'checked' : '';
+                        @endphp
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-2">
+                            <input type="checkbox" class="custom-control-input" id="size-{{ $loop->index }}" name="sizes[]" value="{{ strtolower($size) }}" {{ $checked }} onchange="document.getElementById('filterForm').submit();">
+                            <label class="custom-control-label" for="size-{{ $loop->index }}">{{ $size }}</label>
+                        </div>
+                        @endforeach
                     </div>
                 </form>
+
             </div>
             <!-- Color End -->
 
-            <!-- Size Start -->
-            <h5 class="section-title position-relative text-uppercase mb-3">
-                <span class="bg-secondary pr-3">Filter by size</span>
-            </h5>
-            <div class="bg-light p-4 mb-30">
-                <form>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" checked id="size-all" />
-                        <label class="custom-control-label" for="size-all">All Size</label>
-                        <span class="badge border font-weight-normal">1000</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-1" />
-                        <label class="custom-control-label" for="size-1">XS</label>
-                        <span class="badge border font-weight-normal">150</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-2" />
-                        <label class="custom-control-label" for="size-2">S</label>
-                        <span class="badge border font-weight-normal">295</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-3" />
-                        <label class="custom-control-label" for="size-3">M</label>
-                        <span class="badge border font-weight-normal">246</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-4" />
-                        <label class="custom-control-label" for="size-4">L</label>
-                        <span class="badge border font-weight-normal">145</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" id="size-5" />
-                        <label class="custom-control-label" for="size-5">XL</label>
-                        <span class="badge border font-weight-normal">168</span>
-                    </div>
-                </form>
-            </div>
-            <!-- Size End -->
+
         </div>
         <!-- Shop Sidebar End -->
 
@@ -409,7 +369,7 @@
                 @endforelse
 
 
-                <div class="col-12">
+                <!-- <div class="col-12">
                     <nav>
                         <ul class="pagination justify-content-center">
                             <li class="page-item disabled">
@@ -431,7 +391,7 @@
                             </li>
                         </ul>
                     </nav>
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- Shop Product End -->

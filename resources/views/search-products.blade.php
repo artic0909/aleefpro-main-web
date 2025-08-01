@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Aleef Pro's Blogs</title>
+    <title>Searched Products</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="Free HTML Templates" name="keywords" />
     <meta content="Free HTML Templates" name="description" />
@@ -19,16 +19,16 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/animate/animate.min.css" rel="stylesheet" />
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="{{ asset('lib/animate/animate.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet" />
-    <link href="css/serach-responsive.css" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/serach-responsive.css') }}" rel="stylesheet">
 </head>
 
 <!-- Topbar Start -->
@@ -108,6 +108,7 @@
                             <span class="badge text-danger border border-warning rounded-circle">0</span>
                         </a>
                         @endauth
+
                     </div>
 
 
@@ -196,8 +197,8 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
                         <a href="/" class="nav-item nav-link">Home</a>
-                        <a href="/product-categories" class="nav-item nav-link">Products</a>
-                        <a href="/blogs" class="nav-item nav-link active">Blogs</a>
+                        <a href="/product-categories" class="nav-item nav-link active">Products</a>
+                        <a href="/blogs" class="nav-item nav-link">Blogs</a>
                         <a href="/contact" class="nav-item nav-link">Contact</a>
                     </div>
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
@@ -234,49 +235,25 @@
 <!-- Navbar End -->
 
 <!-- Breadcrumb Start -->
-@foreach ($abouts as $about)
 <div class="container-fluid">
     <div class="row px-xl-5">
         <div class="col-12">
-            <img src="{{ asset('storage/' . $about->breadcrumb) }}" class="img-fluid" width="100%" alt="" />
+            <img src="img/breadc.webp" class="img-fluid" width="100%" alt="" />
             <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="#">Aleef Pro</a>
-                <span class="breadcrumb-item active">Blogs</span>
+                <a class="breadcrumb-item text-dark" href="/">Home</a>
+                <span class="breadcrumb-item active">Searched Product</span>
             </nav>
         </div>
     </div>
 </div>
-@endforeach
 <!-- Breadcrumb End -->
 
-
-
-<!-- Blogs Start -->
+<!-- Shop Start -->
 <div class="container-fluid">
     <div class="row px-xl-5">
-        <!-- Shop Sidebar Start -->
-        <div class="col-lg-3 col-md-4">
-
-            <!-- Color Start -->
-            <h5 class="section-title position-relative text-uppercase mb-3">
-                <span class="bg-secondary pr-3">Latest Post</span>
-            </h5>
-            @if($lastOneBlog)
-            <div class="bg-light p-4 mb-30">
-                <div class="mb-3" style="width: 100%; height: 150px; overflow: hidden;">
-                    <img src="{{ asset('storage/' . $lastOneBlog->image) }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="">
-                </div>
-                <a class="h5 text-cl text-decoration-none" href="{{ route('customer.blog-details', $lastOneBlog->slug) }}">{{ $lastOneBlog->blog_name }}</a>
-                <p><small class="font-weight-bold">Posted : {{ \Carbon\Carbon::parse($lastOneBlog->posted_date)->format('jS F Y') }}</small></p>
-            </div>
-            @endif
-            <!-- Color End -->
-
-        </div>
-        <!-- Shop Sidebar End -->
 
         <!-- Shop Product Start -->
-        <div class="col-lg-9 col-md-8">
+        <div class="col-lg-12 col-md-8">
             <div class="row pb-3">
                 <div class="col-12 pb-1">
                     <div class="d-flex align-items-center justify-content-between mb-4">
@@ -291,79 +268,68 @@
                     </div>
                 </div>
 
-                @foreach($blogs as $blog)
-                <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                @forelse($products as $product)
+                @php
+                $images = json_decode($product->images, true);
+                $firstImage = isset($images[0]) ? str_replace('\/', '/', $images[0]) : null;
+                @endphp
+                <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                     <div class="product-item bg-light mb-4">
                         <div class="product-img position-relative overflow-hidden">
-                            <div style="width: 100%; height: 150px; overflow: hidden;">
-                                <img src="{{ asset('storage/' . $blog->image) }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="">
-                            </div>
+
+                            @if ($firstImage)
+                            <img class="img-fluid w-100" src="{{ asset('storage/' . $firstImage) }}" alt="{{ $product->product_name }}" />
+                            @endif
+
 
                         </div>
-                        <div class="text-center py-4 p-2">
-                            <a class="h5 text-cl text-decoration-none" href="{{ route('customer.blog-details', $blog->slug) }}">{{$blog->blog_name}}</a>
-                            <p><small class="font-weight-bold">Posted : {{ \Carbon\Carbon::parse($blog->posted_date)->format('jS F Y') }}</small></p>
+                        <div class="py-4 p-3">
+                            <a class="h5 text-decoration-none text-cl" href="{{ route('customer.product-details', [
+       'mainSlug' => $product->subCategory->mainCategory->slug,
+       'subSlug' => $product->subCategory->slug,
+       'productSlug' => $product->slug
+   ]) }}" style="text-align: start;">{{$product->product_name}}</a>
+                            <div class="d-flex align-items-center justify-content-start mt-2">
+                                <h6>Price: ₹{{$product->selling_price}}</h6>
+                                <h6 class="text-muted ml-2"><del>₹{{$product->actual_price}}</del></h6>
+                            </div>
 
+                            <div style="text-align: start;">
+                                <p class="text-muted m-0 p-0">Sizes: {{$product->sizes}}</p>
+                                <p class="text-muted m-0 p-0">Colors: {{$product->colors}}</p>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                            </div>
+
+                            <div class="product-actions mt-3" style="display: flex; justify-content: space-evenly;">
+                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
+
+                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+
+                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa-solid fa-pen-to-square"></i></a>
+
+                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa-solid fa-circle-info"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                @endforeach
-
+                @empty
                 <div class="col-12">
-                    <nav>
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#">Prev</a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">...</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">10</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <p>No products found under this category.</p>
                 </div>
-
+                @endforelse
 
             </div>
         </div>
         <!-- Shop Product End -->
     </div>
 </div>
-<!-- Blogs End -->
-
-
-
-
-<!-- Offer Start -->
-<div class="container-fluid pt-5 pb-3">
-    <div class="row px-xl-5">
-        @foreach($offers as $offer)
-        <div class="col-md-6">
-            <div class="product-offer mb-30" style="height: 300px">
-                <img class="img-fluid" src="{{ asset('storage/' . $offer->image) }}" alt="" />
-                <div class="offer-text">
-                    <h6 class="text-white text-uppercase">Save {{$offer->offer_percentage}}</h6>
-                    <h3 class="text-white mb-3">Special Offer</h3>
-                    <a href="{{$offer->link}}" class="btn btn-primary2">Shop Now</a>
-                </div>
-            </div>
-        </div>
-        @endforeach
-    </div>
-</div>
-<!-- Offer End -->
-
-
+<!-- Shop End -->
 
 
 
@@ -372,7 +338,7 @@
 <div class="container-fluid bg-blue text-secondary mt-5 pt-5">
     <div class="row px-xl-5 pt-5">
         <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-            <img src="img/logo1.jpg" class="img-fluid fade-edges" width="400" alt="logo" />
+            <img src="{{asset('img/logo1.jpg')}}" class="img-fluid fade-edges" width="400" alt="logo" />
             <p class="mb-2 mt-2">
                 <i class="fa fa-map-marker-alt text-primary mr-3"></i>{{$social->address}}
             </p>
@@ -451,15 +417,12 @@
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<script src="lib/easing/easing.min.js"></script>
-<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="{{ asset('lib/easing/easing.min.js') }}"></script>
+<script src="{{ asset('lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
-<!-- Contact Javascript File -->
-<script src="mail/jqBootstrapValidation.min.js"></script>
-<script src="mail/contact.js"></script>
 
 <!-- Template Javascript -->
-<script src="js/main.js"></script>
+<script src="{{ asset('js/main.js') }}"></script>
 </body>
 
 </html>

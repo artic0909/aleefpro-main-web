@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Customer\CustomerController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 
+Route::get('/search', [CustomerController::class, 'searchProducts'])->name('search.products');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
