@@ -380,7 +380,7 @@
     <div class="container-fluid bg-blue text-secondary mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                <img src="{{asset('img/logo1.jpg')}}" class="img-fluid fade-edges" width="400" alt="logo" />
+                <img src="img/logo1.jpg" class="img-fluid fade-edges" width="400" alt="logo" />
                 <p class="mb-2 mt-2">
                     <i class="fa fa-map-marker-alt text-primary mr-3"></i>{{$social->address}}
                 </p>
@@ -388,34 +388,23 @@
                     <i class="fa fa-envelope text-primary mr-3"></i>{{$social->email}}
                 </p>
                 <p class="mb-0">
-                    <i class="fa fa-phone-alt text-primary mr-3"></i>{{$social->mobile}}
+                    <i class="fa fa-phone text-primary mr-3"></i>{{$social->mobile}}
                 </p>
             </div>
             <div class="col-lg-8 col-md-12">
                 <div class="row">
-                    <div class="col-md-4 mb-5">
-                        <h5 class="text-secondary text-uppercase mb-4">Product Categories</h5>
+                    <div class="col-md-6 mb-5">
+                        <h5 class="text-secondary text-uppercase mb-4">Direct Links</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
+                            <a class="text-secondary mb-2" href="/faq"><i class="fa fa-angle-right mr-2"></i>FAQs</a>
+                            <a class="text-secondary mb-2" href="/blogs"><i class="fa fa-angle-right mr-2"></i>Blogs</a>
+                            <a class="text-secondary mb-2" href="/about"><i class="fa fa-angle-right mr-2"></i>About US</a>
+                            <a class="text-secondary mb-2" href="/contact"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                            <a class="text-secondary mb-2" href="/product-categories"><i class="fa fa-angle-right mr-2"></i>Product Categories</a>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-5">
-                        <h5 class="text-secondary text-uppercase mb-4">Usefull Links</h5>
-                        <div class="d-flex flex-column justify-content-start">
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>Links</a>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-5">
+
+                    <div class="col-md-6 mb-5">
                         <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
                         <p>Send us your email &amp; get latest updates!</p>
                         <form action="">
