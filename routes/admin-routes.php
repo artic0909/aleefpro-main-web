@@ -84,4 +84,22 @@ Route::middleware(['auth:admins'])->group(function () {
     Route::post('/admin/social-handel', [AdminController::class, 'addSocial'])->name('admin.social.store');
     Route::put('/admin/social-handel/update/{id}', [AdminController::class, 'editSocial'])->name('admin.social.update');
     Route::delete('/admin/social-handel/delete/{id}', [AdminController::class, 'deleteSocial'])->name('admin.social.delete');
+
+    // Cart Enquiry
+    Route::get('/admin/cart-inquiry', [AdminController::class, 'cartEnquiryView'])->name('admin.cart-enquiry');
+    Route::post('/admin/cart-enquiry/delete/{id}', [AdminController::class, 'deleteCartEnquiry'])->name('admin.cart-enquiry.delete');
+
+    // Product Enquiry
+    Route::get('/admin/product-inquiry', [AdminController::class, 'productEnquiryView'])->name('admin.product-enquiry');
+    Route::post('/admin/product-enquiry/delete/{id}', [AdminController::class, 'deleteProductEnquiry'])->name('admin.product-enquiry.delete');
+
+    // Custom Product Enquiry
+    Route::get('/admin/customization-inquiry', [AdminController::class, 'customProductEnquiryView'])->name('admin.custom-product-enquiry');
+    Route::post('/admin/customization-inquiry/delete/{id}', [AdminController::class, 'deleteCustomEnquiry'])->name('admin.custom-product-enquiry.delete');
+
+    // Contact Enquiry
+    Route::get('/admin/contact-us/inquiry', [AdminController::class, 'contactEnquiryView'])->name('admin.contact-enquiry');
+    Route::delete('/admin/contact-us/inquiry/delete/{id}', [AdminController::class, 'deleteContact'])->name('admin.contact-enquiry.delete');
+
+
 });

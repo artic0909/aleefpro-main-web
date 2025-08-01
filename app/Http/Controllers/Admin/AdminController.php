@@ -7,10 +7,14 @@ use App\Models\About;
 use App\Models\Admin;
 use App\Models\Blog;
 use App\Models\Customer;
+use App\Models\CartEnquiry;
+use App\Models\CustomEnquiry;
 use App\Models\Faq;
 use App\Models\MainCategory;
+use App\Models\ProductEnquiry;
 use App\Models\Offer;
 use App\Models\Partner;
+use App\Models\Contact;
 use App\Models\Product;
 use App\Models\ScrollBanners;
 use App\Models\Social;
@@ -889,5 +893,78 @@ class AdminController extends Controller
         $social->delete();
 
         return back()->with('success', 'Social handle deleted successfully!');
+    }
+
+    // Cart Enquiry ===========================================================>
+    public function cartEnquiryView()
+    {
+        $cartEnquiries = CartEnquiry::with('customer')->latest()->get();
+
+        return view('admin.admin-cart-enquiry', compact('cartEnquiries'));
+    }
+
+    public function deleteCartEnquiry($id)
+    {
+        $cartEnquiry = CartEnquiry::findOrFail($id);
+        $cartEnquiry->delete();
+
+        return redirect()->back()->with('success', 'Cart enquiry deleted successfully.');
+    }
+
+    // Product Enquiry ===========================================================>
+    public function productEnquiryView()
+    {
+        $enquiries = ProductEnquiry::latest()->get();
+        return view('admin.admin-product-enquiry', compact('enquiries'));
+    }
+
+    public function deleteProductEnquiry($id)
+    {
+        $cartEnquiry = ProductEnquiry::findOrFail($id);
+        $cartEnquiry->delete();
+
+        return redirect()->back()->with('success', 'Product enquiry deleted successfully.');
+    }
+
+    // Custom Product Enquiry ===========================================================>
+    public function customProductEnquiryView()
+    {
+
+        $enquiries = CustomEnquiry::latest()->get();
+
+        return view('admin.admin-custom-product-enquiry', compact('enquiries'));
+    }
+
+    public function deleteCustomEnquiry($id)
+    {
+        $enquiry = CustomEnquiry::findOrFail($id);
+
+        // Optionally delete image files
+        if ($enquiry->company_logo && Storage::disk('public')->exists($enquiry->company_logo)) {
+            Storage::disk('public')->delete($enquiry->company_logo);
+        }
+        if ($enquiry->product_customize_image && Storage::disk('public')->exists($enquiry->product_customize_image)) {
+            Storage::disk('public')->delete($enquiry->product_customize_image);
+        }
+
+        $enquiry->delete();
+
+        return redirect()->back()->with('success', 'Custom enquiry deleted successfully.');
+    }
+
+    // Contact Us ===========================================================>
+    public function contactEnquiryView()
+    {
+
+        $enquiries = Contact::latest()->get();
+        return view('admin.admin-contact-enquiry', compact('enquiries'));
+    }
+
+    public function deleteContact($id)
+    {
+        $enquiry = Contact::findOrFail($id);
+        $enquiry->delete();
+
+        return redirect()->back()->with('success', 'Enquiry deleted successfully.');
     }
 }
